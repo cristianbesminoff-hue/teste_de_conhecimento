@@ -23,7 +23,6 @@ input{font:inherit;width:100%;padding:12px;border:1px solid var(--bd);border-rad
 </head>
 <body>
 <main>
-  <!-- ECRÃ DE IDENTIFICAÇÃO -->
   <div id="ecra-id" class="card">
     <h1>Prova Técnica Unifique</h1>
     <p>Identifique-se para iniciar a avaliação. O instrutor precisa de aprovar o seu acesso.</p>
@@ -33,7 +32,6 @@ input{font:inherit;width:100%;padding:12px;border:1px solid var(--bd);border-rad
     <div id="msg-status" class="center" style="margin-top:12px;font-weight:600;color:var(--mu)"></div>
   </div>
 
-  <!-- ECRÃ DA PROVA -->
   <div id="ecra-prova" class="card hide">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
       <span id="progresso" class="badge">Questão 1 de 20</span>
@@ -44,7 +42,6 @@ input{font:inherit;width:100%;padding:12px;border:1px solid var(--bd);border-rad
     <button id="btn-responder" onclick="proximaQuestao()" class="hide">Seguinte</button>
   </div>
 
-  <!-- ECRÃ DE RESULTADO -->
   <div id="ecra-resultado" class="card hide center">
     <h1>Prova Concluída!</h1>
     <p id="texto-resultado"></p>
@@ -55,14 +52,15 @@ input{font:inherit;width:100%;padding:12px;border:1px solid var(--bd);border-rad
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
-// --- TODAS AS QUESTÕES PADRÃO EMBUTIDAS ---
+// --- TODAS AS QUESTÕES EMEDIDAS DIRETAMENTE NO CÓDIGO ---
+// (Para adicionar novas questões, basta incluir uma nova linha no formato: Pergunta|Correta|Errada1|Errada2|Errada3|Errada4)
 const RAW = `Quantos cabos flat cada ranhura da roldana nova comporta?|2|1|3|4|8
 Quantos clientes cada roldana nova de flats acomoda?|Até 16|Até 8|Até 12|Até 4|Até 20
 Em mudança de direção em 90º com flats, o que é obrigatório?|Duas alças|Uma alça|Spiral Tube|Suporte dielétrico|Roldana extra
 A roldana antiga suporta até:|8 cabos|4 cabos|16 cabos|12 cabos|2 cabos
 O suporte dielétrico é usado para:|Sustentar cabos AS que passam pelo poste|Ancorar drop|Fazer reserva técnica|Fixar caixa de emenda|Fixar plaqueta
 Quando NÃO usar suporte dielétrico?|Quando há ângulo no cabo|Em trecho reto|Em cabo primário|Em cabo de 06FO|Em poste de concreto
-Na passagem por dielétrico, o spiral tube vai:|~10 cm no lado oposto ao sinal|No lado do sinal|30 cm nos dois lados|En toda a extensão|Não se usa
+Na passagem por dielétrico, o spiral tube vai:|~10 cm no lado oposto ao sinal|No lado do sinal|30 cm nos dois lados|Em toda a extensão|Não se usa
 A "volta em falso" no dielétrico serve para:|Evitar que o spiral corra para o meio do vão|Estética|Reserva técnica|Aterramento|Medir sinal
 Spiral tube padrão para acabamento de cabos AS:|Amarelo de ½|Azul de ¼|Preto de 1"|Vermelho de ⅜|Branco de 2"
 Spiral tube usado no drop flat:|½ ou ⅜|1"|¼|2"|Nenhum
@@ -141,7 +139,161 @@ Quem atende é um menor de idade. O correto é:|Explicar que não pode entrar, d
 Se quem atende NÃO é o titular, o técnico deve:|Perguntar nome e grau de parentesco e registrar o documento na OS|Recusar o atendimento|Ignorar o documento|Pedir o CPF do titular por telefone|Cobrar uma taxa
 Se a pessoa não disponibilizar o documento:|O serviço é feito e a informação anotada na OS|O serviço é cancelado|O técnico exige à força|O cliente é multado|A visita é pendenediada
 A proteção de calçado é obrigatória em:|Todas as visitas, instalação ou manutenção|Só na instalação|Só na manutenção|Só em casa com carpete|Só quando o cliente pedir
-Em visitas de manutenção, o técnico deve perguntar:|Em qual cômodo o equipamento está instalado|Quanto o cliente paga de internet|Se o cliente tem Netflix|Qual la idade do cliente|Se há animais na casa
+Em visitas de manutenção, o técnico deve perguntar:|Em qual cômodo o equipamento está instalado|Quanto o cliente paga de internet|Se o cliente tiene Netflix|Qual la idade del cliente|Se há animais na casa
 Ao tirar foto do equipamento:|Não deve aparecer mais nada na imagem|Deve aparecer o cliente|Deve aparecer a fachada|Pode ser foto de outro celular|Deve aparecer o endereço
 No teste de velocidade, o técnico pode:|Usar o dispositivo do cliente, desde que ele permita|Usar sempre o próprio celular pessoal|Dispensar o teste|Testar sem avisar o cliente|Usar o computador do vizinho
-Ao finalizar o atendimento, o técnico deve:|Deixar
+Ao finalizar o atendimento, o técnico deve:|Deixar o local limpo, recolher seus materiais e perguntar se pode ajudar em algo mais|Sair rapidamente sem falar|Deixar sobras de cabo no local|Pedir avaliação 5 ao cliente|Cobrar gorjeta
+Qual pilar da cultura Unifique diz "Nosso sucesso é o sucesso dos nossos clientes"?|Centralidade no cliente|Alta performance|Senso de dono e atitude inovadora|Colaboração|Economia de custos
+Sobre o tratamento ao cliente, o treinamento orienta:|Not tratá-lo como número ou ordem de serviço|Tratá-lo pelo número da OS|Evitar explicar detalhes|Responder só o que perguntarem|Usar termos técnicos sempre
+Para transmitir segurança ao cliente, o técnico deve:|Ser claro e transparente e explicar quantas vezes for preciso|Evitar perguntas|Falar rápido|Deixar dúvidas para depois|Dizer que não é com ele
+Cliente "sem conexão": o que perguntar primeiro?|Se notou quando ficou sem conexão (queda de energia, situação na rua)|Qual o plano de TV|Se já trocou de provedor|Quanto tempo de contrato falta|Se tem seguro
+Toda verificação interna na casa do cliente exige:|Acompanhamento do cliente|Autorização do vizinho|Foto da fachada|Uso de luvas de BT|Assinatura do líder
+Em quedas de conexão, uma das primeiras perguntas é:|O problema ocorre por cabo ou por Wi-Fi?|Qual a cor do roteador?|Quantos anos tem a casa?|Quem instalou a fibra?|Quanto o cliente paga?
+Cliente com IPTV de terceiros reclama de lentidão. O técnico deve:|Informar que a Unifique não limita nem bloqueia e que a instabilidade pode estar na hospedagem do serviço|Dizer que o serviço é pirata|Bloquear o serviço|Cancelar a visita|Trocar a ONU sem testar
+Se não consegue resolver por falta de equipamento ou alcance, o técnico:|Avisa a unidade pedindo auxílio ou nova visita|Deixa o cliente sem retorno|Pega equipamento de outro cliente|Fecha a OS como resolvida|Cobra visita extra
+Ao trocar o equipamento, o técnico deve explicar ao cliente:|As diferenças de frequência do sinal|O preço do equipamento|A marca do vizinho|Nada, pois é indiferente|Como abrir o equipamento
+Em ausência do cliente, a foto no app deve ser:|Apenas do cartão "Estivemos aqui"|Da fachada|Do número da casa|Da rua|Da poste
+Quem indica o ponto de perfuração na parede:|Assume a responsabilidade por danos a elementos não visíveis|Nunca tem responsabilidade|É sempre o técnico|É sempre a Unifique|É o supervisor
+No fechamento, marcar "Problema resolvido: SIM" só se:|A solicitação foi totalmente atender|O técnico terminou o horário|O cliente estava satisfeito|Houve troca de equipamento|Passou mais de 1 hora
+Quais ordens de serviço são pagas?|Apenas as executadas|Também clientes ausentes|Também pendenciadas|Todas agendadas|Só as de manutenção
+Qual o máximo de cabo UTP por equipamento mesh sem cobrança adicional?|20 metros|5 metros|10 metros|50 metros|100 metros
+Quantos equipamentos tem o kit mesh?|1 controlador + 3 agentes (4 no total)|1 controlador + 1 agente|2 controladores + 2 agentes|5 agentes|1 controlador + 5 agentes
+Ponto ideal para instalar o roteador mesh agente, medido no sinal do principal:|-65 dBm|-30 dBm|-90 dBm|-10 dBm|0 dBm
+Qual a preferência na instalação do mesh?|Por cabo de rede|Por Wi-Fi|Por rádio|Por cabo coaxial|Por fibra
+Ativar mesh via Wi-Fi (sem cabo) é permitido:|Em cenários específicos, com autorização prévia do líder de Ativação e Manutenção|Sempre|Nunca|Se o cliente preferir|Se o técnico estiver com pressa
+Em qual porta os equipamentos mesh devem ser conectados?|WAN dos roteadores|LAN dos roteadores|RJ11|USB|Console
+Sobre marcas no mesh:|Usar equipamentos da mesma marca (exceto ZTE F670L com TP-Link HC220-G5)|Misturar qualquer marca|Só ZTE com ZTE e TP-Link com TP-Link, sem exceção|Qualquer marca com cabo Cat6|Só Mikrotik
+É permitido instalar agentes mesh em outra residência?|Não, apenas em extensões da casa do cliente (edícula, quiosque)|Sim, no vizinho|Sim, se o vizinho pedir|Sim, com Wi-Fi|Sim, no prédio ao lado
+Roteador TP-Link com LED branco/verde estático indica:|Configurado e conectado à internet|Falha no equipamento|Atualizando firmware|Conexão perdida|Reiniciando
+Onde posicionar o roteador para melhor sinal?|Local central, elevado e com o mínimo de obstáculos|Atrás da TV|Dentro de armário metálico|No chão do canto|Junto ao micro-ondas
+Apps como Wi-Fi Analyzer e WiFiman servem para:|Medir o sinal e achar o melhor local de instalação|Ativar a ONU|Medir potência óptica|Abrir a OS|Baixar materiais
+A sincronização via WPS do mesh pode levar:|1 a 2 minutos|10 segundos|30 minutos|2 horas|1 dia
+O cabo de sinal pode ser usado em:|Áreas internas, até 50 m (FTTB, mesh, TV, fastpoint)|Câmeras com PoE|Áreas externas|Qualquer distância|Equipamentos com fonte PoE
+Qual ferragem é usada para fixar a roldana de 8 vias?|BAP|Fita de aço sem BAP|Prego|Cola|Arame de espina
+O suporte Mini PT é fixado no poste padrão com:|Cinta + fecho de aço inox|BAP|Parafuso J|Arame|Cola
+Um poste comporta BAP 2. Usar BAP 3 é:|Desperdício de material|Obrigatório|Mais seguro e recomendado|Proibido por norma elétrica|Indiferente
+A BAP é tensionada no poste com:|Parafuso J|Fita inox|Arame|Prego|Cola
+A BAP pode ser instalada por cima de outros elementos do poste?|Não|Sim|Só de outras operadoras|Só em poste de madeira|Só com autorização do cliente
+O olhal deve ser instalado:|Nas faces do poste, nunca nos cantos|Nos cantos|Na ponta do parafuso|Só na rua|Em qualquer lugar`;
+
+let Q = [];
+let alunoId = localStorage.getItem("alunoId") || null;
+let nomeAluno = localStorage.getItem("nomeAluno") || "";
+let questaoAtual = 0;
+let respostasDadas = [];
+let dbOk = false;
+let DB, CFG = {apiKey:"AIzaSyCIvffrClPs-qR-WqVNirr8-n7LqsjGtio",authDomain:"prova-de-instrucao.firebaseapp.com",databaseURL:"https://prova-de-instrucao-default-rtdb.firebaseio.com",projectId:"prova-de-instrucao",appId:"1:720424141498:web:ac9557168acf5a37a2f883"};
+
+const $ = id => document.getElementById(id);
+
+function init() {
+  let baseQ = RAW.split("\n").map(l => l.split("|")).filter(a => a.length === 6);
+  Q = baseQ;
+  $("nq").textContent = Q.length + " questões disponíveis";
+  $("bs").disabled = false;
+  $("bs").textContent = "Entrar e Iniciar Prova";
+
+  if (nomeAluno) $("input-nome").value = nomeAluno;
+
+  try {
+    firebase.initializeApp(CFG);
+    DB = firebase.database();
+    dbOk = true;
+    if (alunoId) verificarStatusAluno();
+  } catch (e) {
+    console.warn("Modo offline ativado.", e);
+  }
+}
+
+function registarAluno() {
+  const nome = $("input-nome").value.trim();
+  if (nome.length < 3) { alert("Por favor, digite o seu nome completo."); return; }
+  nomeAluno = nome;
+  localStorage.setItem("nomeAluno", nome);
+
+  if (!dbOk) { iniciarProva(); return; }
+
+  $("bs").disabled = true;
+  $("bs").textContent = "A aguardar aprovação do instrutor...";
+
+  if (!alunoId) {
+    const refNovo = DB.ref("alunos").push();
+    alunoId = refNovo.key;
+    localStorage.setItem("alunoId", alunoId);
+    refNovo.set({ nome: nomeAluno, status: "pendente", timestamp: Date.now() });
+  } else {
+    DB.ref("alunos/" + alunoId).update({ nome: nomeAluno, status: "pendente" });
+  }
+
+  verificarStatusAluno();
+}
+
+function verificarStatusAluno() {
+  DB.ref("alunos/" + alunoId).on("value", snapshot => {
+    const dados = snapshot.val();
+    if (!dados) {
+      alunoId = null;
+      localStorage.removeItem("alunoId");
+      $("bs").disabled = false;
+      $("bs").textContent = "Entrar e Iniciar Prova";
+      return;
+    }
+
+    if (dados.status === "aprovado") {
+      iniciarProva();
+    } else if (dados.status === "negado") {
+      $("msg-status").textContent = "Acesso negado pelo instrutor.";
+      $("bs").disabled = false;
+      $("bs").textContent = "Tentar Novamente";
+    } else {
+      $("msg-status").textContent = "Aguardando o instrutor liberar o seu acesso...";
+    }
+  });
+}
+
+function iniciarProva() {
+  $("ecra-id").classList.add("hide");
+  $("ecra-prova").classList.remove("hide");
+  carregarQuestao();
+}
+
+function carregarQuestao() {
+  if (questaoAtual >= Q.length) { finalizarProva(); return; }
+  $("progresso").textContent = `Questão ${questaoAtual + 1} de${Q.length}`;
+  const q = Q[questaoAtual];
+  $("enunciado").textContent = q[0];
+
+  let opcoes = [q[1], q[2], q[3], q[4], q[5]];
+  opcoes.sort(() => Math.random() - 0.5);
+
+  const container = $("container-opcoes");
+  container.innerHTML = "";
+  $("btn-responder").classList.add("hide");
+
+  opcoes.forEach(opt => {
+    const div = document.createElement("div");
+    div.className = "opt";
+    div.textContent = opt;
+    div.onclick = () => selecionarOpcao(div, opt, q[1]);
+    container.appendChild(div);
+  });
+}
+
+function selecionarOpcao(elemento, escolhida, correta) {
+  document.querySelectorAll(".opt").forEach(el => el.classList.remove("selected"));
+  elemento.classList.add("selected");
+  respostasDadas[questaoAtual] = { escolhida, correta, acertou: escolhida === correta };
+  $("btn-responder").classList.remove("hide");
+}
+
+function proximaQuestao() { questaoAtual++; carregarQuestao(); }
+
+function finalizarProva() {
+  $("ecra-prova").classList.add("hide");
+  $("ecra-resultado").classList.remove("hide");
+
+  const acertos = respostasDadas.filter(r => r.acertou).length;
+  const total = Q.length;
+  const percentual = Math.round((acertos / total) * 100);
+
+  $("texto-resultado").innerHTML = `Parabéns, <b>${nomeAluno}</b>!<br>Acertou <b>${acertos}</b> de
