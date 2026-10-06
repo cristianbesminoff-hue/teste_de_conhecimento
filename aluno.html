@@ -1,56 +1,68 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="utf-8">
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Prova Técnica Unifique - Aluno</title>
 <style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f5f7fb;--card:#fff;--tx:#1d1d4f;--mu:#666a8a;--ac:#00aeef;--bd:#d8dcec;--ok:#1e9e5a;--er:#d6364a}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10122a;--card:#1a1d3d;--tx:#eef0ff;--mu:#a3a8cc;--bd:#33376a}}
-:root[data-theme="dark"]{--bg:#10122a;--card:#1a1d3d;--tx:#eef0ff;--mu:#a3a8cc;--bd:#33376a}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.45}
-main{max-width:640px;margin:0 auto;padding:16px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px}
-h1{font-size:1.5rem;margin:0 0 8px;color:var(--ac)}
-p{color:var(--mu)}
-button{font:inherit;cursor:pointer}
-input{font:inherit;width:100%;padding:12px;border:2px solid var(--bd);border-radius:12px;background:transparent;color:var(--tx)}
-.sm{display:inline-block;width:auto;padding:6px 12px;margin:6px 6px 0 0;font-size:.9rem}
-.go{background:var(--ac);color:#fff;border:0;border-radius:12px;padding:14px 22px;font-weight:700;width:100%;margin-top:12px;text-align:center;text-decoration:none;display:block}
-.go:disabled{opacity:.4;cursor:not-allowed}
-.opt{display:block;width:100%;text-align:left;background:transparent;color:var(--tx);border:2px solid var(--bd);border-radius:12px;padding:12px 14px;margin:8px 0}
-.opt.sel{border-color:var(--ac);background:rgba(0,174,239,.12)}
-.bar{height:8px;background:var(--bd);border-radius:8px;overflow:hidden;margin:6px 0 16px}
-.bar i{display:block;height:100%;background:var(--ac)}
-.q{font-size:1.1rem;font-weight:600;margin:0 0 8px}
-.big{font-size:3rem;font-weight:800;margin:4px 0}
-.ok{color:var(--ok)}.er{color:var(--er)}
-.rev{border-top:1px solid var(--bd);padding:10px 0;font-size:.92rem}
+:root{box-sizing:border-box;--bg:#f5f7fb;--card:#fff;--tx:#1d1d4f;--mu:#666a8a;--ac:#00aeef;--bd:#d8dcec;--ok:#1e9e5a;--er:#d6364a}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,sans-serif;line-height:1.45}
+main{max-width:600px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px;margin-bottom:16px}
+h1,h2{color:var(--ac);margin-top:0}
+button{font:inherit;cursor:pointer;background:var(--ac);color:#fff;border:0;border-radius:8px;padding:12px 20px;font-weight:700;width:100%;text-align:center;margin-top:10px}
+button:disabled{background:var(--mu);opacity:0.6;cursor:not-allowed}
+input{font:inherit;width:100%;padding:12px;border:1px solid var(--bd);border-radius:8px;box-sizing:border-box;margin-bottom:10px}
+.opt{background:var(--bg);border:1px solid var(--bd);padding:12px;border-radius:8px;margin-bottom:8px;cursor:pointer;transition:0.2s}
+.opt:hover{border-color:var(--ac);background:#eef9ff}
+.opt.selected{background:var(--ac);color:#fff;border-color:var(--ac)}
 .hide{display:none}
-</style></head><body><main>
-<div id="gate" class="card"><h1>Prova Técnica Unifique</h1><p id="gm">Carregando…</p>
-<div id="gf" class="hide"><input id="nm" placeholder="Seu nome completo" maxlength="60"><button class="go" id="gj">Solicitar entrada</button></div>
-<button class="go hide" id="gt" style="background:var(--mu)">Modo treino (sem registro)</button>
-</div>
-<div id="start" class="card hide"><h1>Prova Técnica Unifique</h1>
-<p>Instalação e manutenção · Atendimento, mesh e fixação</p>
-<p>• 20 questões sorteadas de um banco de <span id="nq">0</span><br>• Múltipla escolha, 5 opções<br>• Nota de 0 a 10 · Aprovação com média 8,0<br>• Sem voltar: responda e avance</p>
-<button class="go" id="bs">Começar a prova</button></div>
-<div id="quiz" class="card hide"><div id="ct" style="color:var(--mu);font-size:.9rem"></div><div class="bar"><i id="pb"></i></div>
-<p class="q" id="qt"></p><div id="ops"></div><button class="go" id="nx" disabled>Próxima</button></div>
-<div id="res" class="card hide"></div>
+.center{text-align:center}
+.badge{background:var(--bg);padding:4px 8px;border-radius:4px;font-size:0.85rem;color:var(--mu)}
+</style>
+</head>
+<body>
+<main>
+  <!-- ECRÃ DE IDENTIFICAÇÃO -->
+  <div id="ecra-id" class="card">
+    <h1>Prova Técnica Unifique</h1>
+    <p>Identifique-se para iniciar a avaliação. O instrutor precisa de aprovar o seu acesso.</p>
+    <input type="text" id="input-nome" placeholder="Digite o seu Nome Completo">
+    <div class="badge" id="nq">A carregar questões...</div>
+    <button id="bs" onclick="registarAluno()" disabled>A carregar...</button>
+    <div id="msg-status" class="center" style="margin-top:12px;font-weight:600;color:var(--mu)"></div>
+  </div>
+
+  <!-- ECRÃ DA PROVA -->
+  <div id="ecra-prova" class="card hide">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <span id="progresso" class="badge">Questão 1 de 20</span>
+      <span id="temporizador" class="badge">⏱️</span>
+    </div>
+    <h2 id="enunciado">A carregar pergunta...</h2>
+    <div id="container-opcoes"></div>
+    <button id="btn-responder" onclick="proximaQuestao()" class="hide">Seguinte</button>
+  </div>
+
+  <!-- ECRÃ DE RESULTADO -->
+  <div id="ecra-resultado" class="card hide center">
+    <h1>Prova Concluída!</h1>
+    <p id="texto-resultado"></p>
+    <button onclick="window.location.reload()">Terminar / Sair</button>
+  </div>
 </main>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
-// Questões padrão embutidas
-const RAW=`Quantos cabos flat cada ranhura da roldana nova comporta?|2|1|3|4|8
+// --- TODAS AS QUESTÕES PADRÃO EMBUTIDAS ---
+const RAW = `Quantos cabos flat cada ranhura da roldana nova comporta?|2|1|3|4|8
 Quantos clientes cada roldana nova de flats acomoda?|Até 16|Até 8|Até 12|Até 4|Até 20
 Em mudança de direção em 90º com flats, o que é obrigatório?|Duas alças|Uma alça|Spiral Tube|Suporte dielétrico|Roldana extra
 A roldana antiga suporta até:|8 cabos|4 cabos|16 cabos|12 cabos|2 cabos
 O suporte dielétrico é usado para:|Sustentar cabos AS que passam pelo poste|Ancorar drop|Fazer reserva técnica|Fixar caixa de emenda|Fixar plaqueta
 Quando NÃO usar suporte dielétrico?|Quando há ângulo no cabo|Em trecho reto|Em cabo primário|Em cabo de 06FO|Em poste de concreto
-Na passagem por dielétrico, o spiral tube vai:|~10 cm no lado oposto ao sinal|No lado do sinal|30 cm nos dois lados|Em toda a extensão|Não se usa
+Na passagem por dielétrico, o spiral tube vai:|~10 cm no lado oposto ao sinal|No lado do sinal|30 cm nos dois lados|En toda a extensão|Não se usa
 A "volta em falso" no dielétrico serve para:|Evitar que o spiral corra para o meio do vão|Estética|Reserva técnica|Aterramento|Medir sinal
 Spiral tube padrão para acabamento de cabos AS:|Amarelo de ½|Azul de ¼|Preto de 1"|Vermelho de ⅜|Branco de 2"
 Spiral tube usado no drop flat:|½ ou ⅜|1"|¼|2"|Nenhum
@@ -125,4 +137,11 @@ Na visita, sobre a fachada do imóvel:|Não registrar foto da fachada|Sempre fot
 Sobre o serviço de IPTV do cliente, o técnico:|Nunca o trata como pirata|Pode chamá-lo de pirata|Bloqueia o serviço|Limita a banda|Recusa o atendimento
 Como o técnico deve se apresentar ao ser atendido pelo cliente?|Cumprimentar, dizer nome, que é da Unifique e que tem visita agendada em nome do cliente|Entrar direto e começar o serviço|Pedir o documento antes de falar|Apenas mostrar o crachá|Perguntar se o cliente já pagou a fatura
 Ninguém atende no local. Qual o procedimento?|Campainha ou palmas, tentar contato, acionar o bot e deixar o Comunicado de Visita|Entrar pelo portão e esperar|Fotografar a fachada e ir embora|Cancelar a OS sem avisar|Ligar para outro cliente
-Quem atende
+Quem atende é um menor de idade. O correto é:|Explicar que não pode entrar, deixar o "Estivemos aqui!" e avisar a Unidade|Fazer o serviço normalmente|Pedir que chame um vizinho|Entrar só no quintal|Fotografar o menor
+Se quem atende NÃO é o titular, o técnico deve:|Perguntar nome e grau de parentesco e registrar o documento na OS|Recusar o atendimento|Ignorar o documento|Pedir o CPF do titular por telefone|Cobrar uma taxa
+Se a pessoa não disponibilizar o documento:|O serviço é feito e a informação anotada na OS|O serviço é cancelado|O técnico exige à força|O cliente é multado|A visita é pendenediada
+A proteção de calçado é obrigatória em:|Todas as visitas, instalação ou manutenção|Só na instalação|Só na manutenção|Só em casa com carpete|Só quando o cliente pedir
+Em visitas de manutenção, o técnico deve perguntar:|Em qual cômodo o equipamento está instalado|Quanto o cliente paga de internet|Se o cliente tem Netflix|Qual la idade do cliente|Se há animais na casa
+Ao tirar foto do equipamento:|Não deve aparecer mais nada na imagem|Deve aparecer o cliente|Deve aparecer a fachada|Pode ser foto de outro celular|Deve aparecer o endereço
+No teste de velocidade, o técnico pode:|Usar o dispositivo do cliente, desde que ele permita|Usar sempre o próprio celular pessoal|Dispensar o teste|Testar sem avisar o cliente|Usar o computador do vizinho
+Ao finalizar o atendimento, o técnico deve:|Deixar
