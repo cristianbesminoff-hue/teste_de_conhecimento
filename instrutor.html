@@ -10,41 +10,34 @@ body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-
 main{max-width:800px;margin:0 auto;padding:16px}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px;margin-bottom:16px}
 h1,h2{color:var(--ac);margin-top:0}
-button{font:inherit;cursor:pointer;background:var(--ac);color:#fff;border:0;border-radius:8px;padding:10px 16px;font-weight:700;text-decoration:none;display:inline-block;text-align:center}
+button{font:inherit;cursor:pointer;background:var(--ac);color:#fff;border:0;border-radius:8px;padding:10px 16px;font-weight:700;display:inline-block;text-align:center}
 button.danger{background:var(--er)}
 button.ok-btn{background:var(--ok)}
+button.pdf-btn{background:#e74c3c}
 .row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
 .item{border-bottom:1px solid var(--bd);padding:12px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
 .item:last-child{border-bottom:0}
-.q-title{font-weight:600;margin-bottom:4px}
-.q-opts{font-size:0.9rem;color:var(--mu)}
-.hide{display:none}
+
+/* Estilo específico para impressão/PDF */
+@media print {
+  body { background: #fff; color: #000; }
+  button, .row { display: none !important; }
+  .card { border: none; padding: 0; box-shadow: none; }
+}
 </style>
 </head>
 <body>
 <main>
-  <!-- SECÇÃO DE GESTÃO DE ALUNOS -->
   <div class="card">
-    <h1>Painel do Instrutor - Alunos</h1>
-    <p>Aprove ou recuse o acesso dos alunos à prova.</p>
-    <div id="lista-alunos">A carregar alunos…</div>
-  </div>
-
-  <!-- SECÇÃO DE GESTÃO DE QUESTÕES -->
-  <div class="card">
-    <h2>Gestão de Questões</h2>
-    <p>Adicione novas perguntas ao banco de dados ou consulte/remova as questões já cadastradas.</p>
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <div>
+        <h1>Painel do Instrutor</h1>
+        <p>Aprove ou recuse o acesso dos alunos e consulte os resultados.</p>
+      </div>
+      <button class="pdf-btn" onclick="exportarPDF()">🖨️ Exportar Relatório (PDF)</button>
+    </div>
     
-    <div class="row">
-      <a href="editor.html"><button>+ Cadastrar Nova Questão</button></a>
-      <button class="ok-btn" onclick="alternarConsulta()">🔍 Consultar / Gerir Questões Cadastradas (<span id="total-q">0</span>)</button>
-    </div>
-
-    <!-- Lista oculta por predefinição, abre ao clicar no botão -->
-    <div id="seccao-consulta" class="hide" style="margin-top:16px; border-top:1px solid var(--bd); padding-top:16px;">
-      <h3>Questões Adicionadas Recentemente</h3>
-      <div id="lista-questoes">Nenhuma questão personalizada encontrada.</div>
-    </div>
+    <div id="lista-alunos" style="margin-top:20px;">A carregar alunos…</div>
   </div>
 </main>
 
@@ -55,28 +48,44 @@ button.ok-btn{background:var(--ok)}
 const senhaInformada = prompt("Painel Restrito. Digite a senha do instrutor:");
 if (senhaInformada !== "102030") {
   alert("Senha incorreta ou acesso negado.");
-  window.location.href = "index.html"; // Redireciona de volta para a página inicial
+  window.location.href = "index.html";
 }
 
-const CFG={apiKey:"AIzaSyCIvffrClPs-qR-WqVNirr8-n7LqsjGtio",authDomain:"prova-de-instrucao.firebaseapp.com",databaseURL:"https://prova-de-instrucao-default-rtdb.firebaseio.com",projectId:"prova-de-instrucao",appId:"1:720424141498:web:ac9557168acf5a37a2f883"};
+const CFG = {apiKey:"AIzaSyCIvffrClPs-qR-WqVNirr8-n7LqsjGtio",authDomain:"prova-de-instrucao.firebaseapp.com",databaseURL:"https://prova-de-instrucao-default-rtdb.firebaseio.com",projectId:"prova-de-instrucao",appId:"1:720424141498:web:ac9557168acf5a37a2f883"};
 firebase.initializeApp(CFG);
-const DB=firebase.database();
+const DB = firebase.database();
 
-// --- ALUNOS ---
+let dadosAlunosGlobais = {};
+
+// --- GESTÃO DE ALUNOS ---
 DB.ref("alunos").on("value", snapshot => {
   const dados = snapshot.val();
   const container = document.getElementById("lista-alunos");
   container.innerHTML = "";
+  
   if (!dados) {
-    container.textContent = "Nenhum aluno solicitou entrada ainda.";
+    container.textContent = "Nenhum aluno registado ainda.";
+    dadosAlunosGlobais = {};
     return;
   }
+  
+  dadosAlunosGlobais = dados;
+
   Object.keys(dados).forEach(id => {
     const a = dados[id];
     const div = document.createElement("div");
     div.className = "item";
+    
+    let infoExtra = `Status: <b>${a.status}</b>`;
+    if(a.status === "concluido") {
+      infoExtra += ` | Acertos: <b>${a.acertos}/${a.total}</b> (${a.percentual}%)`;
+    }
+
     div.innerHTML = `
-      <div><b>${a.nome}</b><br><small>Status: ${a.status}</small></div>
+      <div>
+        <b>${a.nome}</b><br>
+        <small>${infoExtra}</small>
+      </div>
       <div>
         ${a.status !== 'aprovado' ? `<button class="ok-btn" onclick="setStatus('${id}', 'aprovado')">Aprovar</button>` : ''}
         ${a.status !== 'negado' ? `<button class="danger" onclick="setStatus('${id}', 'negado')">Negar</button>` : ''}
@@ -90,48 +99,8 @@ DB.ref("alunos").on("value", snapshot => {
 function setStatus(id, st) { DB.ref("alunos/" + id + "/status").set(st); }
 function removerAluno(id) { if(confirm("Deseja remover este registo de aluno?")) DB.ref("alunos/" + id).remove(); }
 
-// --- QUESTÕES ---
-function alternarConsulta() {
-  const sec = document.getElementById("seccao-consulta");
-  sec.classList.toggle("hide");
-}
-
-DB.ref("questoes").on("value", snapshot => {
-  const dados = snapshot.val();
-  const container = document.getElementById("lista-questoes");
-  container.innerHTML = "";
-  
-  if (!dados) {
-    document.getElementById("total-q").textContent = "0";
-    container.textContent = "Nenhuma questão personalizada cadastrada no Firebase.";
-    return;
-  }
-
-  const chaves = Object.keys(dados);
-  document.getElementById("total-q").textContent = chaves.length;
-
-  chaves.exports = chaves.forEach(id => {
-    const q = dados[id];
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = `
-      <div>
-        <div class="q-title">${q.texto}</div>
-        <div class="q-opts">
-          <span style="color:var(--ok)"><b>Correta:</b> ${q.correta}</span><br>
-          <span style="color:var(--er)"><b>Incorretas:</b> ${q.incorretas.join(" | ")}</span>
-        </div>
-      </div>
-      <button class="danger" onclick="removerQuestao('${id}')">Excluir</button>
-    `;
-    container.appendChild(div);
-  });
-});
-
-function removerQuestao(id) {
-  if (confirm("Tem certeza que deseja excluir esta questão do banco de dados?")) {
-    DB.ref("questoes/" + id).remove();
-  }
+function exportarPDF() {
+  window.print(); // Abre a janela nativa do navegador permitindo guardar diretamente como PDF ou imprimir
 }
 </script>
 </body>
