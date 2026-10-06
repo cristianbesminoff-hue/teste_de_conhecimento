@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prova Técnica Unifique - Aluno</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f5f7fb;--card:#fff;--tx:#1d1d4f;--mu:#666a8a;--ac:#00aeef;--bd:#d8dcec;--ok:#1e9e5a;--er:#d6364a}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10122a;--card:#1a1d3d;--tx:#eef0ff;--mu:#a3a8cc;--bd:#33376a}}
+:root[data-theme="dark"]{--bg:#10122a;--card:#1a1d3d;--tx:#eef0ff;--mu:#a3a8cc;--bd:#33376a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.45}
+main{max-width:640px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px}
+h1{font-size:1.5rem;margin:0 0 8px;color:var(--ac)}
+p{color:var(--mu)}
+button{font:inherit;cursor:pointer}
+input{font:inherit;width:100%;padding:12px;border:2px solid var(--bd);border-radius:12px;background:transparent;color:var(--tx)}
+.sm{display:inline-block;width:auto;padding:6px 12px;margin:6px 6px 0 0;font-size:.9rem}
+.go{background:var(--ac);color:#fff;border:0;border-radius:12px;padding:14px 22px;font-weight:700;width:100%;margin-top:12px}
+.go:disabled{opacity:.4;cursor:not-allowed}
+.opt{display:block;width:100%;text-align:left;background:transparent;color:var(--tx);border:2px solid var(--bd);border-radius:12px;padding:12px 14px;margin:8px 0}
+.opt.sel{border-color:var(--ac);background:rgba(0,174,239,.12)}
+.bar{height:8px;background:var(--bd);border-radius:8px;overflow:hidden;margin:6px 0 16px}
+.bar i{display:block;height:100%;background:var(--ac)}
+.q{font-size:1.1rem;font-weight:600;margin:0 0 8px}
+.big{font-size:3rem;font-weight:800;margin:4px 0}
+.ok{color:var(--ok)}.er{color:var(--er)}
+.rev{border-top:1px solid var(--bd);padding:10px 0;font-size:.92rem}
+.hide{display:none}
+</style></head><body><main>
+<div id="gate" class="card"><h1>Prova Técnica Unifique</h1><p id="gm">Carregando…</p>
+<div id="gf" class="hide"><input id="nm" placeholder="Seu nome completo" maxlength="60"><button class="go" id="gj">Solicitar entrada</button></div>
+<button class="go hide" id="gt" style="background:var(--mu)">Modo treino (sem registro)</button>
+</div>
+<div id="start" class="card hide"><h1>Prova Técnica Unifique</h1>
+<p>Instalação e manutenção · Atendimento, mesh e fixação</p>
+<p>• 20 questões sorteadas de um banco de <span id="nq"></span><br>• Múltipla escolha, 5 opções<br>• Nota de 0 a 10 · Aprovação com média 8,0<br>• Sem voltar: responda e avance</p>
+<button class="go" id="bs">Começar a prova</button></div>
+<div id="quiz" class="card hide"><div id="ct" style="color:var(--mu);font-size:.9rem"></div><div class="bar"><i id="pb"></i></div>
+<p class="q" id="qt"></p><div id="ops"></div><button class="go" id="nx" disabled>Próxima</button></div>
+<div id="res" class="card hide"></div>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+const RAW=`Quantos cabos flat cada ranhura da roldana nova comporta?|2|1|3|4|8
+Quantos clientes cada roldana nova de flats acomoda?|Até 16|Até 8|Até 12|Até 4|Até 20
+Em mudança de direção em 90º com flats, o que é obrigatório?|Duas alças|Uma alça|Spiral Tube|Suporte dielétrico|Roldana extra
+A roldana antiga suporta até:|8 cabos|4 cabos|16 cabos|12 cabos|2 cabos
+O suporte dielétrico é usado para:|Sustentar cabos AS que passam pelo poste|Ancorar drop|Fazer reserva técnica|Fixar caixa de emenda|Fixar plaqueta
+Quando NÃO usar suporte dielétrico?|Quando há ângulo no cabo|Em trecho reto|Em cabo primário|Em cabo de 06FO|Em poste de concreto
+Na passagem por dielétrico, o spiral tube vai:|~10 cm no lado oposto ao sinal|No lado do sinal|30 cm nos dois lados|Em toda a extensão|Não se usa
+A "volta em falso" no dielétrico serve para:|Evitar que o spiral corra para o meio do vão|Estética|Reserva técnica|Aterramento|Medir sinal
+Spiral tube padrão para acabamento de cabos AS:|Amarelo de ½|Azul de ¼|Preto de 1"|Vermelho de ⅜|Branco de 2"
+Spiral tube usado no drop flat:|½ ou ⅜|1"|¼|2"|Nenhum
+A plaqueta de identificação deve ficar com o nome:|Virado para baixo|Virado para cima|Para o poste|Para a rua|Indiferente
+A plaqueta deve ser orientada para:|O lado do sinal|O lado oposto ao sinal|A rua|O transformador|Qualquer lado
+Quantas plaquetas por BAP?|Apenas uma|Duas|Três|Quatro|Nenhuma
+A plaqueta é presa com:|Arame de espina|Fita adesiva|Parafuso|Cola|Velcro
+Em ancoragem com alça, o spiral tube deve cobrir:|Toda a lupa e as alças, um por cabo|Somente a lupa|Somente as alças|Somente a ponta|Nada
+O suporte de ancoragem Mini PT é fixado com:|Cinta + fecho de aço inox|Parafuso J|Prego|Cola|Arame de espina
+Onde NÃO instalar o Mini PT?|Na quina do poste padrão|Na face do poste|Na parede|Com cinta inox|Com plaqueta
+O pimentão serve para:|Receber o drop do poste padrão em entrada aérea|Ancorar cabo AS|Ancorar cordoalha|Fazer reserva|Fixar CA
+Reserva técnica interna na casa do cliente só pode ficar:|No forro ou caixa de passagem (5 a 10 m)|Nos cômodos|No telhado|Na parede|Na garagem
+Escolta cruzeta para reserva técnica (RT):|Uma BAP em posição "X"|Duas BAPs em "+"|Três BAPs|Sem BAP|Uma BAP em "T"
+Escolta cruzeta para caixa de emenda (CE):|Duas BAPs em "+"|Uma BAP em "X"|Três BAPs|Nenhuma BAP|Uma BAP em "T"
+Quantas escoltas no mesmo poste?|Não mais que uma|Duas|Três|Ilimitado|Quatro
+Em relação aos cabos de BT, o cabo da Unifique:|Nunca passa entre ou acima|Pode passar acima|Pode passar entre|Passa junto|Passa por cima do transformador
+Em relação à luminária, o cabo deve ser instalado:|Abaixo da luminária|Acima|Cortando seus fios|Entre ela e a BT|Sobre o fotossensor
+Perto de transformadores, havendo rede Unifique:|Seguir no mesmo sentido|Seguir no sentido oposto|Escolher qualquer sentido|Passar por cima|Cancelar o serviço
+Espinação com guia exige no mínimo quantas pessoas?|3|2|1|4|5
+Em qual frequência se mede o sinal no GPON?|1490 nm|1310 nm|1550 nm|1577 nm|850 nm
+Perda média na frequência de 1490 nm:|0,23 dB/km|0,35 dB/km|0,5 dB/km|1,0 dB/km|0,1 dB/km
+O retorno da ONU trabalha em:|1310 nm, com 0,35 dB/km|1490 nm, com 0,23 dB/km|1550 nm|1577 nm|850 nm
+Em qual frequência se mede o XGSPON?|1577 nm|1490 nm|1310 nm|1550 nm|1625 nm
+Faixa de potência para ativar ONU XGSPON:|-20 a -10 dBm|-30 a -25 dBm|-5 a 0 dBm|-40 a -35 dBm|0 a +5 dBm
+Diferença aceitável entre sinal da CA e do cliente:|Até 1,5 dBm abaixo ou 0,5 dBm acima|Até 3 dBm abaixo|Exatamente igual|Até 5 dBm acima|Qualquer valor
+A aferição na CA deve ser feita com:|Cordão óptico APC/UPC|Fibra nua|Pigtail do splitter|Qualquer cabo|Conector de campo
+Nunca se deve retirar:|O pigtail do splitter|O cordão óptico|A tampa|A anilha|A escolta
+Se o sinal divergir entre CA e cliente, verifique:|O cordão de aferição e a regulagem do power meter|Só trocar a ONU|Só trocar a CA|Ignorar|Cancelar a OS
+Atrás da CA, o drop flat dá quantas voltas na escolta?|Duas|Uma|Três|Quatro|Nenhuma
+Acabamento do drop flat próximo à entrada da CA:|Spiral ⅜ individual|Spiral ½ coletivo|Spiral 1"|Fita isolante|Nenhum
+Dentro da CA, a alma de aço do flat:|Entra por dentro da borracha de vedação com uma pequena dobra|É cortada|Fica solta|Vai ao splitter|É removida
+Casa sem número, a anilha deve identificar como:|SN|0|X|NA|ND
+Porta designada do splitter indisponível:|Fazer batimento da caixa com o bot|Usar outra porta|Usar outra caixa|Cancelar|Ligar ao cliente
+Qual o ângulo do polimento APC?|8°|0°|15°|30°|45°
+Capacidade de limpeza da caneta de conectores:|800/900 cliques|100 cliques|200 cliques|50 cliques|2000 cliques
+Em manutenção, a limpeza do conector deve ser feita:|Logo após desconectar e antes de reconectar|Só no fim do dia|Nunca|Semanalmente|Mensalmente
+O padrão do RJ45 no mesh é:|T568-A|T568-C|T100|Cat 7|RJ11
+O cinto paraquedista tipo "H" tem quantos pontos de ancoragem?|4|2|3|6|1
+O trava-quedas é preso nos pontos:|Frontais superiores|Laterais|Dorsais|Da cintura|Das pernas
+O capacete classe "E" protege contra choques de até:|20.000 V|1.000 V|500 V|5.000 V|127 V
+As luvas de baixa tensão aguentam:|500 V a 1000 V|10 V|50 V|20.000 V|220 mil V
+As luvas de vaqueta curta:|Não são isolantes nem usadas com as de BT|São isolantes|São usadas sobre as de BT|Substituem as de BT|Aguentam 1000 V
+O trava-quedas é usado em atividades acima de:|2 metros|0,5 metro|1 metro|5 metros|10 metros
+A corda da linha de vida tem:|12 mm e 20 metros|8 mm e 5 m|12 mm e 2 m|20 mm e 12 m|6 mm e 50 m
+A corda de amarração de topo de escada tem:|12 mm e 2 metros|12 mm e 20 m|8 mm e 5 m|20 mm e 2 m|6 mm e 1 m
+O mosquetão oval tem travamento tipo:|Rosca|Mola simples|Pino|Gatilho|Sem trava
+Quantos cones por escada?|5|2|3|8|10
+A fita Eureka de ancoragem suporta cargas de trabalho de até:|100 kg|20 kg|50 kg|300 kg|500 kg
+Escada de fibra deve ter no mínimo:|6,00 m|3 m|4 m|8 m|10 m
+Na escada de fibra, o técnico não pode passar do:|Antepenúltimo degrau|Último degrau|Penúltimo degrau|Primeiro degrau|Segundo degrau
+A escada extensiva de alumínio:|Não pode ser usada em postes|É a padrão para postes|Serve para BT|Substitui a de fibra|Serve para cordoalha
+Para álcool isopropílico é proibido usar:|Garrafa PET|Vasilha com dispensador|Frasco de pressão|Frasco homologado|Vasilha da empresa
+O alicate decapador de acrilato deve ser limpo com:|Pincel, a seco|Álcool isopropílico|Sopro|Água|Pano úmido
+O ajuste da altura da lâmina do clivador é feito com auxílio de:|Máquina de fusão|Power meter|OTDR|Caneta VFL|Lupa
+A caneta VFL do power meter tem:|20 mW|1 mW|5 mW|50 mW|100 mW
+Na 1ª fiscalização irregular de CLT:|Advertência formal + reciclagem|Suspensão|Demissão|Multa|Nada
+Na 1ª fiscalização irregular de parceira:|Multa + reciclagem|Bloqueio permanente|Suspensão de 5 dias|Advertência verbal|Nada
+Na 3ª fiscalização irregular de CLT:|Solicitação de desligamento por justa causa|Advertência|Suspensão de 1 dia|Multa|Reciclagem
+Meta mensal de vistorias das lideranças:|6|2|10|20|1
+Quanto dura a sessão de login do IFS MWO?|10 horas|1 hora|24 horas|5 horas|30 minutos
+No aviso de login expirado, o técnico deve clicar:|"AGORA"|"Atrasado"|No X|Em "Limpar cache"|Em "Forçar sincronização"
+O informe de deslocamento deve ser dado:|Ao iniciar a locomoção até o cliente|Ao chegar no cliente|Ao final do dia|Após a instalação|Antes de sair da base
+Na foto do auxiliar, o correto é:|Segurar crachá ou documento|Segurar o QR Code|Foto da fachada|Sem auxiliar|Foto de outro celular
+Se só houver menores no local:|Não atender; proceder como ausência e deixar o "Estivemos aqui"|Entrar e atender|Atender no quintal|Pedir o documento ao menor|Fotografar a fachada
+Para avisar que não comparecerá a visita da manhã, o limite é:|10h30|8h|12h|9h|11h30
+Metragem excedente refere-se a cabos acima de:|300 metros|100 m|150 m|500 m|1 km
+O chat "Ativação Fibra Unifique Bot" deve ser usado para:|Apenas novos acessos|Transferência de endereço|Mesh|Telefonia|TV
+Em erro do bot de ativação, o técnico deve:|Tirar print e acionar o SUPUNFTEC2|Cancelar a OS|Ativar manualmente|Usar outra caixa|Esperar o dia seguinte
+A meta de CSAT de atendimento é:|90%|50%|70%|100%|80%
+Qual ação é proibida no IFS MWO sem justificativa?|Limpar dados ou cache|Consultar a agenda|Ver o endereço|Fazer login|Abrir o mapa
+Na visita, sobre a fachada do imóvel:|Não registrar foto da fachada|Sempre fotografar|Fotografar só o número|Enviar ao cliente|Postar no grupo
+Sobre o serviço de IPTV do cliente, o técnico:|Nunca o trata como pirata|Pode chamá-lo de pirata|Bloqueia o serviço|Limita a banda|Recusa o atendimento
+Como o técnico deve se apresentar ao ser atendido pelo cliente?|Cumprimentar, dizer nome, que é da Unifique e que tem visita agendada em nome do cliente|Entrar direto e começar o serviço|Pedir o documento antes de falar|Apenas mostrar o crachá|Perguntar se o cliente já pagou a fatura
+Ninguém atende no local. Qual o procedimento?|Campainha ou palmas, tentar contato, acionar o bot e deixar o Comunicado de Visita|Entrar pelo portão e esperar|Fotografar a fachada e ir embora|Cancelar a OS sem avisar|Ligar para outro cliente
+Quem atende é um menor de idade. O correto é:|Explicar que não pode entrar, deixar o "Estivemos aqui!" e avisar a Unidade|Fazer o serviço normalmente|Pedir que chame um vizinho|Entrar só no quintal|Fotografar o menor
+Se quem atende NÃO é o titular, o técnico deve:|Perguntar nome e grau de parentesco e registrar o documento na OS|Recusar o atendimento|Ignorar o documento|Pedir o CPF do titular por telefone|Cobrar uma taxa
+Se a pessoa não disponibilizar o documento:|O serviço é feito e a informação anotada na OS|O serviço é cancelado|O técnico exige à força|O cliente é multado|A visita é pendenciada
+A proteção de calçado é obrigatória em:|Todas as visitas, instalação ou manutenção|Só na instalação|Só na manutenção|Só em casa com carpete|Só quando o cliente pedir
+Em visitas de manutenção, o técnico deve perguntar:|Em qual cômodo o equipamento está instalado|Quanto o cliente paga de internet|Se o cliente tem Netflix|Qual a idade do cliente|Se há animais na casa
+Ao tirar foto do equipamento:|Não deve aparecer mais nada na imagem|Deve aparecer o cliente|Deve aparecer a fachada|Pode ser foto de outro celular|Deve aparecer o endereço
+No teste de velocidade, o técnico pode:|Usar o dispositivo do cliente, desde que ele permita|Usar sempre o próprio celular pessoal|Dispensar o teste|Testar sem avisar o cliente|Usar o computador do vizinho
+Ao finalizar o atendimento, o técnico deve:|Deixar o local limpo, recolher seus materiais e perguntar se pode ajudar em algo mais|Sair rapidamente sem falar|Deixar sobras de cabo no local|Pedir avaliação 5 ao cliente|Cobrar gorjeta
+Qual pilar da cultura Unifique diz "Nosso sucesso é o sucesso dos nossos clientes"?|Centralidade no cliente|Alta performance|Senso de dono e atitude inovadora|Colaboração|Economia de custos
+Sobre o tratamento ao cliente, o treinamento orienta:|Não tratá-lo como número ou ordem de serviço|Tratá-lo pelo número da OS|Evitar explicar detalhes|Responder só o que perguntarem|Usar termos técnicos sempre
+Para transmitir segurança ao cliente, o técnico deve:|Ser claro e transparente e explicar quantas vezes for preciso|Evitar perguntas|Falar rápido|Deixar dúvidas para depois|Dizer que não é com ele
+Cliente "sem conexão": o que perguntar primeiro?|Se notou quando ficou sem conexão (queda de energia, situação na rua)|Qual o plano de TV|Se já trocou de provedor|Quanto tempo de contrato falta|Se tem seguro
+Toda verificação interna na casa do cliente exige:|Acompanhamento do cliente|Autorização do vizinho|Foto da fachada|Uso de luvas de BT|Assinatura do líder
+Em quedas de conexão, uma das primeiras perguntas é:|O problema ocorre por cabo ou por Wi-Fi?|Qual a cor do roteador?|Quantos anos tem a casa?|Quem instalou a fibra?|Quanto o cliente paga?
+Cliente com IPTV de terceiros reclama de lentidão. O técnico deve:|Informar que a Unifique não limita nem bloqueia e que a instabilidade pode estar na hospedagem do serviço|Dizer que o serviço é pirata|Bloquear o serviço|Cancelar a visita|Trocar a ONU sem testar
+Se não consegue resolver por falta de equipamento ou alcance, o técnico:|Avisa a unidade pedindo auxílio ou nova visita|Deixa o cliente sem retorno|Pega equipamento de outro cliente|Fecha a OS como resolvida|Cobra visita extra
+Ao trocar o equipamento, o técnico deve explicar ao cliente:|As diferenças de frequência do sinal|O preço do equipamento|A marca do vizinho|Nada, pois é indiferente|Como abrir o equipamento
+Em ausência do cliente, a foto no app deve ser:|Apenas do cartão "Estivemos aqui"|Da fachada|Do número da casa|Da rua|Do poste
+Quem indica o ponto de perfuração na parede:|Assume a responsabilidade por danos a elementos não visíveis|Nunca tem responsabilidade|É sempre o técnico|É sempre a Unifique|É o supervisor
+No fechamento, marcar "Problema resolvido: SIM" só se:|A solicitação foi totalmente atendida|O técnico terminou o horário|O cliente estava satisfeito|Houve troca de equipamento|Passou mais de 1 hora
+Quais ordens de serviço são pagas?|Apenas as executadas|Também clientes ausentes|Também pendenciadas|Todas agendadas|Só as de manutenção
+Qual o máximo de cabo UTP por equipamento mesh sem cobrança adicional?|20 metros|5 metros|10 metros|50 metros|100 metros
+Quantos equipamentos tem o kit mesh?|1 controlador + 3 agentes (4 no total)|1 controlador + 1 agente|2 controladores + 2 agentes|5 agentes|1 controlador + 5 agentes
+Ponto ideal para instalar o roteador mesh agente, medido no sinal do principal:|-65 dBm|-30 dBm|-90 dBm|-10 dBm|0 dBm
+Qual a preferência na instalação do mesh?|Por cabo de rede|Por Wi-Fi|Por rádio|Por cabo coaxial|Por fibra
+Ativar mesh via Wi-Fi (sem cabo) é permitido:|Em cenários específicos, com autorização prévia do líder de Ativação e Manutenção|Sempre|Nunca|Se o cliente preferir|Se o técnico estiver com pressa
+Em qual porta os equipamentos mesh devem ser conectados?|WAN dos roteadores|LAN dos roteadores|RJ11|USB|Console
+Sobre marcas no mesh:|Usar equipamentos da mesma marca (exceto ZTE F670L com TP-Link HC220-G5)|Misturar qualquer marca|Só ZTE com ZTE e TP-Link com TP-Link, sem exceção|Qualquer marca com cabo Cat6|Só Mikrotik
+É permitido instalar agentes mesh em outra residência?|Não, apenas em extensões da casa do cliente (edícula, quiosque)|Sim, no vizinho|Sim, se o vizinho pedir|Sim, com Wi-Fi|Sim, no prédio ao lado
+Roteador TP-Link com LED branco/verde estático indica:|Configurado e conectado à internet|Falha no equipamento|Atualizando firmware|Conexão perdida|Reiniciando
+Onde posicionar o roteador para melhor sinal?|Local central, elevado e com o mínimo de obstáculos|Atrás da TV|Dentro de armário metálico|No chão do canto|Junto ao micro-ondas
+Apps como Wi-Fi Analyzer e WiFiman servem para:|Medir o sinal e achar o melhor local de instalação|Ativar a ONU|Medir potência óptica|Abrir a OS|Baixar materiais
+A sincronização via WPS do mesh pode levar:|1 a 2 minutos|10 segundos|30 minutos|2 horas|1 dia
+O cabo de sinal pode ser usado em:|Áreas internas, até 50 m (FTTB, mesh, TV, fastpoint)|Câmeras com PoE|Áreas externas|Qualquer distância|Equipamentos com fonte PoE
+Qual ferragem é usada para fixar a roldana de 8 vias?|BAP|Fita de aço sem BAP|Prego|Cola|Arame de espina
+O suporte Mini PT é fixado no poste padrão com:|Cinta + fecho de aço inox|BAP|Parafuso J|Arame|Cola
+Um poste comporta BAP 2. Usar BAP 3 é:|Desperdício de material|Obrigatório|Mais seguro e recomendado|Proibido por norma elétrica|Indiferente
+A BAP é tensionada no poste com:|Parafuso J|Fita inox|Arame|Prego|Cola
+A BAP pode ser instalada por cima de outros elementos do poste?|Não|Sim|Só de outras operadoras|Só em poste de madeira|Só com autorização do cliente
+O olhal deve ser instalado:|Nas faces do poste, nunca nos cantos|Nos cantos|Na ponta do parafuso|Só na rua|Em qualquer lugar`;
+const Q=RAW.split("\n").map(l=>l.split("|")).filter(a=>a.length==6);
+const $=id=>document.getElementById(id);$("nq").textContent=Q.length+" questões";
+const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+let T,i,sel,hits,log;
+function show(id){["gate","start","quiz","res"].forEach(x=>$(x).classList.toggle("hide",x!=id))}
+function start(){T=sh(Q).slice(0,20).map(a=>({q:a[0],c:a[1],o:sh(a.slice(1))}));i=0;hits=0;log=[];show("quiz");draw()}
+function draw(){const t=T[i];sel=null;$("ct").textContent=`Questão ${i+1} de 20`;$("pb").style.width=(i/20*100)+"%";$("qt").textContent=t.q;
+$("ops").innerHTML="";t.o.forEach(o=>{const b=document.createElement("button");b.className="opt";b.textContent=o;b.onclick=()=>{sel=o;[...$("ops").children].forEach(x=>x.classList.toggle("sel",x===b));$("nx").disabled=false};$("ops").appendChild(b)});
+$("nx").disabled=true;$("nx").textContent=i==19?"Finalizar prova":"Próxima"}
+function next(){const t=T[i];if(sel===t.c)hits++;else log.push({q:t.q,r:sel,c:t.c});i++;i<20?draw():end()}
+function end(){const n=(hits/20*10),ok=n>=8;show("res");report(n);
+$("res").innerHTML=`<h1>${ok?"Aprovado! 🎉":"Reprovado"}</h1><div class="big ${ok?"ok":"er"}">${n.toFixed(1).replace(".",",")}</div><p>${hits} de 20 acertos · média mínima 8,0</p>`+
+(log.length?`<h3>Revisão dos erros</h3>`+log.map(e=>`<div class="rev"><b>${e.q}</b><br><span class="er">Sua resposta: ${e.r}</span><br><span class="ok">Correta: ${e.c}</span></div>`).join(""):`<p class="ok">Gabaritou! Nenhum erro.</p>`)+
+`<button class="go" onclick="start()">Fazer nova prova (20 novas sorteadas)</button>`}
+$("bs").onclick=start;$("nx").onclick=next;
+
+const CFG={apiKey:"AIzaSyCIvffrClPs-qR-WqVNirr8-n7LqsjGtio",authDomain:"prova-de-instrucao.firebaseapp.com",databaseURL:"https://prova-de-instrucao-default-rtdb.firebaseio.com",projectId:"prova-de-instrucao",appId:"1:720424141498:web:ac9557168acf5a37a2f883"};
+let DB=null,ID=null,R0=null;
+try{ID=localStorage.getItem("alunoId")}catch(e){}
+const ok=!CFG.apiKey.startsWith("COLE");
+function gmsg(t,form){$("gm").textContent=t;$("gf").classList.toggle("hide",!form)}
+function report(n){if(DB&&R0)DB.ref("alunos/"+ID+"/tentativas").push({n,h:hits,t:Date.now()}).catch(()=>{})}
+function gupd(){if(!$("quiz").classList.contains("hide")||!$("res").classList.contains("hide"))return;
+ if(!R0){show("gate");gmsg("Informe seu nome para solicitar entrada na prova.",true)}
+ else if(R0.status==="aprovado")show("start");
+ else{show("gate");gmsg(R0.status==="negado"?"Sua entrada foi negada pelo instrutor. Fale com ele.":"Olá, "+R0.nome+"! Aguardando o instrutor aprovar sua entrada…",false)}}
+function watch(){DB.ref("alunos/"+ID).on("value",s=>{R0=s.val();gupd()})}
+function init(){
+ if(!ok){gmsg("Firebase não configurado. Você pode treinar sem registro.",false);$("gt").classList.remove("hide");return}
+ try{firebase.initializeApp(CFG);DB=firebase.database()}catch(e){gmsg("Erro ao conectar ao banco de dados.",false);$("gt").classList.remove("hide");return}
+ if(ID)watch();else gupd()}
+$("gj").onclick=()=>{const n=$("nm").value.trim();if(n.length<3||!DB)return;
+ ID=DB.ref("alunos").push().key;try{localStorage.setItem("alunoId",ID)}catch(e){}
+ DB.ref("alunos/"+ID).set({nome:n,status:"pendente",ts:Date.now()}).then(watch).catch(()=>gmsg("Não foi possível enviar. Tente de novo.",true))};
+$("gt").onclick=()=>show("start");
+init();
+</script></body></html>
