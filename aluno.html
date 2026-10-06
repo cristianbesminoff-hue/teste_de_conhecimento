@@ -34,7 +34,7 @@ input{font:inherit;width:100%;padding:12px;border:2px solid var(--bd);border-rad
 </div>
 <div id="start" class="card hide"><h1>Prova Técnica Unifique</h1>
 <p>Instalação e manutenção · Atendimento, mesh e fixação</p>
-<p>• 20 questões sorteadas de um banco de <span id="nq"></span><br>• Múltipla escolha, 5 opções<br>• Nota de 0 a 10 · Aprovação com média 8,0<br>• Sem voltar: responda e avance</p>
+<p>• 20 questões sorteadas de um banco de <span id="nq">0</span><br>• Múltipla escolha, 5 opções<br>• Nota de 0 a 10 · Aprovação com média 8,0<br>• Sem voltar: responda e avance</p>
 <button class="go" id="bs">Começar a prova</button></div>
 <div id="quiz" class="card hide"><div id="ct" style="color:var(--mu);font-size:.9rem"></div><div class="bar"><i id="pb"></i></div>
 <p class="q" id="qt"></p><div id="ops"></div><button class="go" id="nx" disabled>Próxima</button></div>
@@ -43,6 +43,7 @@ input{font:inherit;width:100%;padding:12px;border:2px solid var(--bd);border-rad
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
+// Questões padrão embutidas
 const RAW=`Quantos cabos flat cada ranhura da roldana nova comporta?|2|1|3|4|8
 Quantos clientes cada roldana nova de flats acomoda?|Até 16|Até 8|Até 12|Até 4|Até 20
 Em mudança de direção em 90º com flats, o que é obrigatório?|Duas alças|Uma alça|Spiral Tube|Suporte dielétrico|Roldana extra
@@ -94,4 +95,34 @@ As luvas de baixa tensão aguentam:|500 V a 1000 V|10 V|50 V|20.000 V|220 mil V
 As luvas de vaqueta curta:|Não são isolantes nem usadas com as de BT|São isolantes|São usadas sobre as de BT|Substituem as de BT|Aguentam 1000 V
 O trava-quedas é usado em atividades acima de:|2 metros|0,5 metro|1 metro|5 metros|10 metros
 A corda da linha de vida tem:|12 mm e 20 metros|8 mm e 5 m|12 mm e 2 m|20 mm e 12 m|6 mm e 50 m
-A corda de amarração de topo de escada tem:|12 mm e 2 metros|12 mm e 20 m|8 mm e 5 m|20 mm e 2 m|6 mm e 1
+A corda de amarração de topo de escada tem:|12 mm e 2 metros|12 mm e 20 m|8 mm e 5 m|20 mm e 2 m|6 mm e 1 m
+O mosquetão oval tem travamento tipo:|Rosca|Mola simples|Pino|Gatilho|Sem trava
+Quantos cones por escada?|5|2|3|8|10
+A fita Eureka de ancoragem suporta cargas de trabalho de até:|100 kg|20 kg|50 kg|300 kg|500 kg
+Escada de fibra deve ter no mínimo:|6,00 m|3 m|4 m|8 m|10 m
+Na escada de fibra, o técnico não pode passar do:|Antepenúltimo degrau|Último degrau|Penúltimo degrau|Primeiro degrau|Segundo degrau
+A escada extensiva de alumínio:|Não pode ser usada em postes|É a padrão para postes|Serve para BT|Substitui a de fibra|Serve para cordoalha
+Para álcool isopropílico é proibido usar:|Garrafa PET|Vasilha com dispensador|Frasco de pressão|Frasco homologado|Vasilha da empresa
+O alicate decapador de acrilato deve ser limpo com:|Pincel, a seco|Álcool isopropílico|Sopro|Água|Pano úmido
+O ajuste da altura da lâmina do clivador é feito com auxílio de:|Máquina de fusão|Power meter|OTDR|Caneta VFL|Lupa
+A caneta VFL do power meter tem:|20 mW|1 mW|5 mW|50 mW|100 mW
+Na 1ª fiscalização irregular de CLT:|Advertência formal + reciclagem|Suspensão|Demissão|Multa|Nada
+Na 1ª fiscalização irregular de parceira:|Multa + reciclagem|Bloqueio permanente|Suspensão de 5 dias|Advertência verbal|Nada
+Na 3ª fiscalização irregular de CLT:|Solicitação de desligamento por justa causa|Advertência|Suspensão de 1 dia|Multa|Reciclagem
+Meta mensal de vistorias das lideranças:|6|2|10|20|1
+Quanto dura a sessão de login do IFS MWO?|10 horas|1 hora|24 horas|5 horas|30 minutos
+No aviso de login expirado, o técnico deve clicar:|"AGORA"|"Atrasado"|No X|Em "Limpar cache"|Em "Forçar sincronização"
+O informe de deslocamento deve ser dado:|Ao iniciar a locomoção até o cliente|Ao chegar no cliente|Ao final do dia|Após a instalação|Antes de sair da base
+Na foto do auxiliar, o correto é:|Segurar crachá ou documento|Segurar o QR Code|Foto da fachada|Sem auxiliar|Foto de outro celular
+Se só houver menores no local:|Não atender; proceder como ausência e deixar o "Estivemos aqui"|Entrar e atender|Atender no quintal|Pedir o documento ao menor|Fotografar a fachada
+Para avisar que não comparecerá a visita da manhã, o limite é:|10h30|8h|12h|9h|11h30
+Metragem excedente refere-se a cabos acima de:|300 metros|100 m|150 m|500 m|1 km
+O chat "Ativação Fibra Unifique Bot" deve ser usado para:|Apenas novos acessos|Transferência de endereço|Mesh|Telefonia|TV
+Em erro do bot de ativação, o técnico deve:|Tirar print e acionar o SUPUNFTEC2|Cancelar a OS|Ativar manualmente|Usar outra caixa|Esperar o dia seguinte
+A meta de CSAT de atendimento é:|90%|50%|70%|100%|80%
+Qual ação é proibida no IFS MWO sem justificativa?|Limpar dados ou cache|Consultar a agenda|Ver o endereço|Fazer login|Abrir o mapa
+Na visita, sobre a fachada do imóvel:|Não registrar foto da fachada|Sempre fotografar|Fotografar só o número|Enviar ao cliente|Postar no grupo
+Sobre o serviço de IPTV do cliente, o técnico:|Nunca o trata como pirata|Pode chamá-lo de pirata|Bloqueia o serviço|Limita a banda|Recusa o atendimento
+Como o técnico deve se apresentar ao ser atendido pelo cliente?|Cumprimentar, dizer nome, que é da Unifique e que tem visita agendada em nome do cliente|Entrar direto e começar o serviço|Pedir o documento antes de falar|Apenas mostrar o crachá|Perguntar se o cliente já pagou a fatura
+Ninguém atende no local. Qual o procedimento?|Campainha ou palmas, tentar contato, acionar o bot e deixar o Comunicado de Visita|Entrar pelo portão e esperar|Fotografar a fachada e ir embora|Cancelar a OS sem avisar|Ligar para outro cliente
+Quem atende
