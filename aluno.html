@@ -25,7 +25,7 @@ input{font:inherit;width:100%;padding:12px;border:1px solid var(--bd);border-rad
 <main>
   <div id="ecra-id" class="card">
     <h1>Prova Técnica Unifique</h1>
-    <p>Identifique-se para iniciar a avaliação. O instrutor precisa de aprovar o seu acesso.</p>
+    <p>Identifique-se para iniciar a avaliação. Serão sorteadas 20 questões aleatórias do banco. O instrutor precisa de aprovar o seu acesso.</p>
     <input type="text" id="input-nome" placeholder="Digite o seu Nome Completo">
     <div id="nq" class="badge">A carregar questões...</div>
     <button id="bs" onclick="registarAluno()">Entrar e Iniciar Prova</button>
@@ -51,7 +51,7 @@ input{font:inherit;width:100%;padding:12px;border:1px solid var(--bd);border-rad
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
-// --- LISTA DE QUESTÕES ---
+// --- LISTA COMPLETA DE QUESTÕES ---
 const RAW = `Quantos cabos flat cada ranhura da roldana nova comporta?|2|1|3|4|8
 Quantos clientes cada roldana nova de flats acomoda?|Até 16|Até 8|Até 12|Até 4|Até 20
 Em mudança de direção em 90º com flats, o que é obrigatório?|Duas alças|Uma alça|Spiral Tube|Suporte dielétrico|Roldana extra
@@ -145,24 +145,24 @@ Qual pilar da cultura Unifique diz "Nosso sucesso é o sucesso dos nossos client
 Sobre o tratamento ao cliente, o treinamento orienta:|Não tratá-lo como número ou ordem de serviço|Tratá-lo pelo número da OS|Evitar explicar detalhes|Responder só o que perguntarem|Usar termos técnicos sempre
 Para transmitir segurança ao cliente, o técnico deve:|Ser claro e transparente e explicar quantas vezes for preciso|Evitar perguntas|Falar rápido|Deixar dúvidas para depois|Dizer que não é com ele
 Cliente "sem conexão": o que perguntar primeiro?|Se notou quando ficou sem conexão (queda de energia, situação na rua)|Qual o plano de TV|Se já trocou de provedor|Quanto tempo de contrato falta|Se tem seguro
-Toda verificação interna na casa do cliente exige:|Acompanhamento del cliente|Autorização del vizinho|Foto da fachada|Uso de luvas de BT|Assinatura del líder
-Em quedas de conexão, uma das primeiras perguntas é:|O problema ocorre por cabo ou por Wi-Fi?|Qual a cor del roteador?|Quantos anos tem a casa?|Quem instalou a fibra?|Quanto o cliente paga?
-Cliente com IPTV de terceiros reclama de lentidão. O técnico deve:|Informar que a Unifique não limita nem bloqueia e que a instabilidade pode estar na hospedagem del serviço|Dizer que o serviço é pirata|Bloquear o serviço|Cancelar a visita|Trocar a ONU sem testar
+Toda verificação interna na casa do cliente exige:|Acompanhamento do cliente|Autorização do vizinho|Foto da fachada|Uso de luvas de BT|Assinatura do líder
+Em quedas de conexão, uma das primeiras perguntas é:|O problema ocorre por cabo ou por Wi-Fi?|Qual a cor do roteador?|Quantos anos tem a casa?|Quem instalou a fibra?|Quanto o cliente paga?
+Cliente com IPTV de terceiros reclama de lentidão. O técnico deve:|Informar que a Unifique não limita nem bloqueia e que a instabilidade pode estar na hospedagem do serviço|Dizer que o serviço é pirata|Bloquear o serviço|Cancelar a visita|Trocar a ONU sem testar
 Se não consegue resolver por falta de equipamento ou alcance, o técnico:|Avisa a unidade pedindo auxílio ou nova visita|Deixa o cliente sem retorno|Pega equipamento de outro cliente|Fecha a OS como resolvida|Cobra visita extra
-Ao trocar o equipamento, o técnico deve explicar ao cliente:|As diferenças de frequência del serviço|O preço del equipamento|A marca del vizinho|Nada, pois é indiferente|Como abrir o equipamento
-Em ausência del cliente, a foto no app deve ser:|Apenas del cartão "Estivemos aqui"|Da fachada|Do número da casa|Da rua|Da poste
+Ao trocar o equipamento, o técnico deve explicar ao cliente:|As diferenças de frequência do sinal|O preço do equipamento|A marca del vizinho|Nada, pois é indiferente|Como abrir o equipamento
+Em ausência do cliente, a foto no app deve ser:|Apenas do cartão "Estivemos aqui"|Da fachada|Do número da casa|Da rua|Da poste
 Quem indica o ponto de perfuração na parede:|Assume a responsabilidade por danos a elementos não visíveis|Nunca tem responsabilidade|É sempre o técnico|É sempre a Unifique|É o supervisor
 No fechamento, marcar "Problema resolvido: SIM" só se:|A solicitação foi totalmente atendida|O técnico terminou o horário|O cliente estava satisfeito|Houve troca de equipamento|Passou mais de 1 hora
 Quais ordens de serviço são pagas?|Apenas as executadas|Também clientes ausentes|Também pendenciadas|Todas agendadas|Só as de manutenção
 Qual o máximo de cabo UTP por equipamento mesh sem cobrança adicional?|20 metros|5 metros|10 metros|50 metros|100 metros
 Quantos equipamentos tem o kit mesh?|1 controlador + 3 agentes (4 no total)|1 controlador + 1 agente|2 controladores + 2 agentes|5 agentes|1 controlador + 5 agentes
-Ponto ideal para instalar o roteador mesh agente, medido no sinal del principal:|-65 dBm|-30 dBm|-90 dBm|-10 dBm|0 dBm
-Qual a preferência na instalação del mesh?|Por cabo de rede|Por Wi-Fi|Por rádio|Por cabo coaxial|Por fibra
-Ativar mesh via Wi-Fi (sem cabo) é permitido:|Em cenários específicos, com autorização prévia del líder de Ativação e Manutenção|Sempre|Nunca|Se o cliente preferir|Se o técnico estiver com pressa
+Ponto ideal para instalar o roteador mesh agente, medido no sinal do principal:|-65 dBm|-30 dBm|-90 dBm|-10 dBm|0 dBm
+Qual a preferência na instalação do mesh?|Por cabo de rede|Por Wi-Fi|Por rádio|Por cabo coaxial|Por fibra
+Ativar mesh via Wi-Fi (sem cabo) é permitido:|Em cenários específicos, com autorização prévia do líder de Ativação e Manutenção|Sempre|Nunca|Se o cliente preferir|Se o técnico estiver com pressa
 Em qual porta os equipamentos mesh devem ser conectados?|WAN dos roteadores|LAN dos roteadores|RJ11|USB|Console
 Sobre marcas no mesh:|Usar equipamentos da mesma marca (exceto ZTE F670L com TP-Link HC220-G5)|Misturar qualquer marca|Só ZTE com ZTE e TP-Link com TP-Link, sem exceção|Qualquer marca com cabo Cat6|Só Mikrotik
 É permitido instalar agentes mesh em outra residência?|Não, apenas em extensões da casa del cliente (edícula, quiosque)|Sim, no vizinho|Sim, se o vizinho pedir|Sim, com Wi-Fi|Sim, no prédio ao lado
-Roteador TP-Link com LED branco/verde estático indica:|Configurado e conectado à internet|Falha nel equipamento|Atualizando firmware|Conexão perdida|Reiniciando
+Roteador TP-Link com LED branco/verde estático indica:|Configurado e conectado à internet|Falha no equipamento|Atualizando firmware|Conexão perdida|Reiniciando
 Onde posicionar o roteador para melhor sinal?|Local central, elevado e com o mínimo de obstáculos|Atrás da TV|Dentro de armário metálico|No chão del canto|Junto ao micro-ondas
 Apps como Wi-Fi Analyzer e WiFiman servem para:|Medir o sinal e achar o melhor local de instalação|Ativar a ONU|Medir potência óptica|Abrir a OS|Baixar materiais
 A sincronização via WPS del mesh pode levar:|1 a 2 minutos|10 segundos|30 minutos|2 horas|1 dia
@@ -170,7 +170,7 @@ O cabo de sinal pode ser usado em:|Áreas internas, até 50 m (FTTB, mesh, TV, f
 Qual ferragem é usada para fixar a roldana de 8 vias?|BAP|Fita de aço sem BAP|Prego|Cola|Arame de espina
 O suporte Mini PT é fixado no poste padrão com:|Cinta + fecho de aço inox|BAP|Parafuso J|Arame|Cola
 Um poste comporta BAP 2. Usar BAP 3 é:|Desperdício de material|Obrigatório|Mais seguro e recomendado|Proibido por norma elétrica|Indiferente
-A BAP é tensionada nel poste com:|Parafuso J|Fita inox|Arame|Prego|Cola
+A BAP é tensionada no poste com:|Parafuso J|Fita inox|Arame|Prego|Cola
 A BAP pode ser instalada por cima de outros elementos del poste?|Não|Sim|Só de outras operadoras|Só em poste de madeira|Só com autorização del cliente
 O olhal deve ser instalado:|Nas faces del poste, nunca nos cantos|Nos cantos|Na ponta del parafuso|Só na rua|Em qualquer lugar`;
 
@@ -186,10 +186,21 @@ const $ = id => document.getElementById(id);
 
 function init() {
   try {
-    Q = RAW.split("\n").map(l => l.split("|")).filter(a => a.length === 6);
-    $("nq").textContent = Q.length + " questões carregadas";
+    // 1. Lê todas as questões do RAW
+    let todasAsQuestoes = RAW.split("\n").map(l => l.split("|")).filter(a => a.length === 6);
+    
+    // 2. Embaralha todas as questões aleatoriamente (Algoritmo Fisher-Yates)
+    for (let i = todasAsQuestoes.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [todasAsQuestoes[i], todasAsQuestoes[j]] = [todasAsQuestoes[j], todasAsQuestoes[i]];
+    }
+
+    // 3. Seleciona apenas as primeiras 20 questões para esta sessão do aluno
+    Q = todasAsQuestoes.slice(0, 20);
+
+    $("nq").textContent = `${Q.length} questões sorteadas (de um banco de ${todasAsQuestoes.length})`;
   } catch(e) {
-    $("nq").textContent = "Erro ao carregar questões";
+    $("nq").textContent = "Erro ao sortear questões";
   }
 
   if (nomeAluno) $("input-nome").value = nomeAluno;
@@ -213,7 +224,7 @@ function registarAluno() {
   if (!dbOk) { iniciarProva(); return; }
 
   $("bs").disabled = true;
-  $("bs").textContent = "A aguardar aprovação del instrutor...";
+  $("bs").textContent = "A aguardar aprovação do instrutor...";
 
   if (!alunoId) {
     const refNovo = DB.ref("alunos").push();
@@ -241,11 +252,11 @@ function verificarStatusAluno() {
     if (dados.status === "aprovado") {
       iniciarProva();
     } else if (dados.status === "negado") {
-      $("msg-status").textContent = "Acesso negado del instrutor.";
+      $("msg-status").textContent = "Acesso negado pelo instrutor.";
       $("bs").disabled = false;
       $("bs").textContent = "Tentar Novamente";
     } else {
-      $("msg-status").textContent = "Aguardando del instrutor liberar el seu acesso...";
+      $("msg-status").textContent = "Aguardando o instrutor liberar o seu acesso...";
     }
   });
 }
@@ -262,6 +273,7 @@ function carregarQuestao() {
   const q = Q[questaoAtual];
   $("enunciado").textContent = q[0];
 
+  // Mistura também a ordem das alternativas (correta e incorretas) de cada questão
   let opcoes = [q[1], q[2], q[3], q[4], q[5]];
   opcoes.sort(() => Math.random() - 0.5);
 
