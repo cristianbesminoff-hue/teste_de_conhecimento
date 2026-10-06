@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gestão de Questões - Prova Técnica</title>
+<style>
+:root{box-sizing:border-box;--bg:#f5f7fb;--card:#fff;--tx:#1d1d4f;--mu:#666a8a;--ac:#00aeef;--bd:#d8dcec;--ok:#1e9e5a;--er:#d6364a}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,sans-serif;line-height:1.45}
+main{max-width:800px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px;margin-bottom:16px}
+h1,h2{color:var(--ac);margin-top:0}
+input, textarea{font:inherit;width:100%;padding:10px;margin:6px 0 12px;border:2px solid var(--bd);border-radius:8px;background:transparent;color:var(--tx)}
+button{font:inherit;cursor:pointer;background:var(--ac);color:#fff;border:0;border-radius:8px;padding:10px 16px;font-weight:700}
+button.danger{background:var(--er)}
+.item{border-bottom:1px solid var(--bd);padding:12px 0}
+.item:last-child{border-bottom:0}
+.q-title{font-weight:600;margin-bottom:4px}
+.q-opts{font-size:0.9rem;color:var(--mu)}
+.ok{color:var(--ok)}
+.er{color:var(--er)}
+</style>
+</head>
+<body>
+<main>
+  <div class="card">
+    <h1>Adicionar Nova Questão</h1>
+    <label>Enunciado da Questão:</label>
+    <textarea id="q-texto" rows="2" placeholder="Ex: Qual a frequência utilizada no GPON?"></textarea>
+    
+    <label class="ok">Resposta Correta:</label>
+    <input id="q-correta" type="text" placeholder="Ex: 1490 nm">
+    
+    <label class="er">Alternativa Incorreta 1:</label>
+    <input id="q-err1" type="text" placeholder="Ex: 1310 nm">
+    
+    <label class="er">Alternativa Incorreta 2:</label>
+    <input id="q-err2" type="text" placeholder="Ex: 1550 nm">
+    
+    <label class="er">Alternativa Incorreta 3:</label>
+    <input id="q-err3" type="text" placeholder="Ex: 1577 nm">
+    
+    <label class="er">Alternativa Incorreta 4:</label>
+    <input id="q-err4" type="text" placeholder="Ex: 850 nm">
+    
+    <button onclick="adicionarQuestao()">Guardar Nova Questão</button>
+  </div>
+
+  <div class="card">
+    <h2>Questões Cadastradas no Banco (<span id="total-q">0</span>)</h2>
+    <div id="lista-questoes">Carregando questões…</div>
+  </div>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+const CFG={apiKey:"AIzaSyCIvffrClPs-qR-WqVNirr8-n7LqsjGtio",authDomain:"prova-de-instrucao.firebaseapp.com",databaseURL:"https://prova-de-instrucao-default-rtdb.firebaseio.com",projectId:"prova-de-instrucao",appId:"1:720424141498:web:ac9557168acf5a37a2f883"};
+firebase.initializeApp(CFG);
+const DB=firebase.database();
+
+function carregarQuestoes() {
+  DB.ref("questoes").on("value", snapshot => {
+    const dados = snapshot.val();
+    const container = document.getElementById("lista-questoes");
+    container.innerHTML = "";
+    
+    if (!dados) {
+      container.textContent = "Nenhuma questão cadastrada no Firebase ainda.";
+      document.getElementById("total-q").textContent = "0";
+      return;
+    }
+
+    const chaves = Object.keys(dados);
+    document.getElementById("total-q").textContent = chaves.length;
+
+    chaves.forEach(id => {
+      const q = dados[id];
+      const div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = `
+        <div class="q-title">${q.texto}</div>
+        <div class="q-opts">
+          <span class="ok"><b>Correta:</b> ${q.correta}</span><br>
+          <span class="er"><b>Incorretas:</b> ${q.incorretas.join(" | ")}</span>
+        </div>
+        <button class="danger" style="margin-top:8px;padding:6px 12px;font-size:0.8rem" onclick="removerQuestao('${id}')">Remover</button>
+      `;
+      container.appendChild(div);
+    });
+  });
+}
+
+function adicionarQuestao() {
+  const texto = document.getElementById("q-texto").value.trim();
+  const correta = document.getElementById("q-correta").value.trim();
+  const incorretas = [
+    document.getElementById("q-err1").value.trim(),
+    document.getElementById("q-err2").value.trim(),
+    document.getElementById("q-err3").value.trim(),
+    document.getElementById("q-err4").value.trim()
+  ];
+
+  if (!texto || !correta || incorretas.some(i => !i)) {
+    alert("Por favor, preencha todos os campos!");
+    return;
+  }
+
+  DB.ref("questoes").push({ texto, correta, incorretas }).then(() => {
+    alert("Questão adicionada com sucesso!");
+    document.getElementById("q-texto").value = "";
+    document.getElementById("q-correta").value = "";
+    document.getElementById("q-err1").value = "";
+    document.getElementById("q-err2").value = "";
+    document.getElementById("q-err3").value = "";
+    document.getElementById("q-err4").value = "";
+  }).catch(err => {
+    alert("Erro ao adicionar: " + err.message);
+  });
+}
+
+function removerQuestao(id) {
+  if (confirm("Tem certeza que deseja remover esta questão?")) {
+    DB.ref("questoes/" + id).remove();
+  }
+}
+
+carregarQuestoes();
+</script>
+</body>
+</html>
