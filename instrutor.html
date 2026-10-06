@@ -51,6 +51,13 @@ button.ok-btn{background:var(--ok)}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
+// --- PROTEÇÃO DE SENHA DO INSTRUTOR ---
+const senhaInformada = prompt("Painel Restrito. Digite a senha do instrutor:");
+if (senhaInformada !== "102030") {
+  alert("Senha incorreta ou acesso negado.");
+  window.location.href = "index.html"; // Redireciona de volta para a página inicial
+}
+
 const CFG={apiKey:"AIzaSyCIvffrClPs-qR-WqVNirr8-n7LqsjGtio",authDomain:"prova-de-instrucao.firebaseapp.com",databaseURL:"https://prova-de-instrucao-default-rtdb.firebaseio.com",projectId:"prova-de-instrucao",appId:"1:720424141498:web:ac9557168acf5a37a2f883"};
 firebase.initializeApp(CFG);
 const DB=firebase.database();
@@ -103,7 +110,7 @@ DB.ref("questoes").on("value", snapshot => {
   const chaves = Object.keys(dados);
   document.getElementById("total-q").textContent = chaves.length;
 
-  chaves.forEach(id => {
+  chaves.exports = chaves.forEach(id => {
     const q = dados[id];
     const div = document.createElement("div");
     div.className = "item";
