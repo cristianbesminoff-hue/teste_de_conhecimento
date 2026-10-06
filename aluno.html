@@ -128,7 +128,7 @@ Quem atende é um menor de idade. O correto é:|Explicar que não pode entrar, d
 Se quem atende NÃO é o titular, o técnico deve:|Perguntar nome e grau de parentesco e registrar o documento na OS|Recusar o atendimento|Ignorar o documento|Pedir o CPF do titular por telefone|Cobrar uma taxa
 Se a pessoa não disponibilizar o documento:|O serviço é feito e a informação anotada na OS|O serviço é cancelado|O técnico exige à força|O cliente é multado|A visita é pendenciada
 A proteção de calçado é obrigatória em:|Todas as visitas, instalação ou manutenção|Só na instalação|Só na manutenção|Só em casa com carpete|Só quando o cliente pedir
-Em visitas de manutenção, o técnico deve perguntar:|Em qual cômodo o equipamento está instalado|Quanto o cliente paga de internet|Se o cliente tem Netflix|Qual a idade do cliente|Se há animais na casa
+Em visitas de manutenção, o técnico deve perguntar:|Em qual cômodo o equipamento está instalado|Quanto o cliente paga de internet|Se o cliente tem Netflix|Qual la idade do cliente|Se há animais na casa
 Ao tirar foto do equipamento:|Não deve aparecer mais nada na imagem|Deve aparecer o cliente|Deve aparecer a fachada|Pode ser foto de outro celular|Deve aparecer o endereço
 No teste de velocidade, o técnico pode:|Usar o dispositivo do cliente, desde que ele permita|Usar sempre o próprio celular pessoal|Dispensar o teste|Testar sem avisar o cliente|Usar o computador do vizinho
 Ao finalizar o atendimento, o técnico deve:|Deixar o local limpo, recolher seus materiais e perguntar se pode ajudar em algo mais|Sair rapidamente sem falar|Deixar sobras de cabo no local|Pedir avaliação 5 ao cliente|Cobrar gorjeta
@@ -141,7 +141,7 @@ Em quedas de conexão, uma das primeiras perguntas é:|O problema ocorre por cab
 Cliente com IPTV de terceiros reclama de lentidão. O técnico deve:|Informar que a Unifique não limita nem bloqueia e que a instabilidade pode estar na hospedagem do serviço|Dizer que o serviço é pirata|Bloquear o serviço|Cancelar a visita|Trocar a ONU sem testar
 Se não consegue resolver por falta de equipamento ou alcance, o técnico:|Avisa a unidade pedindo auxílio ou nova visita|Deixa o cliente sem retorno|Pega equipamento de outro cliente|Fecha a OS como resolvida|Cobra visita extra
 Ao trocar o equipamento, o técnico deve explicar ao cliente:|As diferenças de frequência do sinal|O preço do equipamento|A marca do vizinho|Nada, pois é indiferente|Como abrir o equipamento
-Em ausência do cliente, a foto no app deve ser:|Apenas do cartão "Estivemos aqui"|Da fachada|Do número da casa|Da rua|Do poste
+Em ausência do cliente, a foto no app deve ser:|Apenas do cartão "Estivemos aqui"|Da fachada|Do número da casa|Da rua|Da poste
 Quem indica o ponto de perfuração na parede:|Assume a responsabilidade por danos a elementos não visíveis|Nunca tem responsabilidade|É sempre o técnico|É sempre a Unifique|É o supervisor
 No fechamento, marcar "Problema resolvido: SIM" só se:|A solicitação foi totalmente atendida|O técnico terminou o horário|O cliente estava satisfeito|Houve troca de equipamento|Passou mais de 1 hora
 Quais ordens de serviço são pagas?|Apenas as executadas|Também clientes ausentes|Também pendenciadas|Todas agendadas|Só as de manutenção
@@ -170,7 +170,7 @@ const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.rand
 let T,i,sel,hits,log;
 function show(id){["gate","start","quiz","res"].forEach(x=>$(x).classList.toggle("hide",x!=id))}
 function start(){T=sh(Q).slice(0,20).map(a=>({q:a[0],c:a[1],o:sh(a.slice(1))}));i=0;hits=0;log=[];show("quiz");draw()}
-function draw(){const t=T[i];sel=null;$("ct").textContent=`Questão ${i+1} de 20`;$("pb").style.width=(i/20*100)+"%";$("qt").textContent=t.q;
+function draw(){const t=T[i];sel=null;$("ct").textContent=`Questão ${i+1} de 20`;$("pb").style.width=(i/20*100)+"\%";$("qt").textContent=t.q;
 $("ops").innerHTML="";t.o.forEach(o=>{const b=document.createElement("button");b.className="opt";b.textContent=o;b.onclick=()=>{sel=o;[...$("ops").children].forEach(x=>x.classList.toggle("sel",x===b));$("nx").disabled=false};$("ops").appendChild(b)});
 $("nx").disabled=true;$("nx").textContent=i==19?"Finalizar prova":"Próxima"}
 function next(){const t=T[i];if(sel===t.c)hits++;else log.push({q:t.q,r:sel,c:t.c});i++;i<20?draw():end()}
@@ -185,19 +185,19 @@ let DB=null,ID=null,R0=null;
 try{ID=localStorage.getItem("alunoId")}catch(e){}
 const ok=!CFG.apiKey.startsWith("COLE");
 function gmsg(t,form){$("gm").textContent=t;$("gf").classList.toggle("hide",!form)}
-function report(n){if(DB&&R0)DB.ref("alunos/"+ID+"/tentativas").push({n,h:hits,t:Date.now()}).catch(()=>{})}
-function gupd(){if(!$("quiz").classList.contains("hide")||!$("res").classList.contains("hide"))return;
+function report(n){if(DB&&ID)DB.ref("alunos/"+ID+"/tentativas").push({n,h:hits,t:Date.now()}).catch(()=>{})}
+function gupd(){if(!$("quiz").classList.contains("hide")\vert{}\vert{}!$("res").classList.contains("hide"))return;
  if(!R0){show("gate");gmsg("Informe seu nome para solicitar entrada na prova.",true)}
  else if(R0.status==="aprovado")show("start");
  else{show("gate");gmsg(R0.status==="negado"?"Sua entrada foi negada pelo instrutor. Fale com ele.":"Olá, "+R0.nome+"! Aguardando o instrutor aprovar sua entrada…",false)}}
-function watch(){DB.ref("alunos/"+ID).on("value",s=>{R0=s.val();gupd()})}
+function watch(){if(!DB||!ID)return;DB.ref("alunos/"+ID).on("value",s=>{R0=s.val();if(!R0){localStorage.removeItem("alunoId");ID=null;}gupd()})}
 function init(){
  if(!ok){gmsg("Firebase não configurado. Você pode treinar sem registro.",false);$("gt").classList.remove("hide");return}
  try{firebase.initializeApp(CFG);DB=firebase.database()}catch(e){gmsg("Erro ao conectar ao banco de dados.",false);$("gt").classList.remove("hide");return}
  if(ID)watch();else gupd()}
 $("gj").onclick=()=>{const n=$("nm").value.trim();if(n.length<3||!DB)return;
  ID=DB.ref("alunos").push().key;try{localStorage.setItem("alunoId",ID)}catch(e){}
- DB.ref("alunos/"+ID).set({nome:n,status:"pendente",ts:Date.now()}).then(watch).catch(()=>gmsg("Não foi possível enviar. Tente de novo.",true))};
+ DB.ref("alunos/"+ID).set({nome:n,status:"pendente",ts:Date.now()}).then(()=>{watch();gupd();}).catch(()=>gmsg("Não foi possível enviar. Tente de novo.",true))};
 $("gt").onclick=()=>show("start");
 init();
 </script></body></html>
