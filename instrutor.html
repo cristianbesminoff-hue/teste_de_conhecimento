@@ -38,19 +38,19 @@ input{font:inherit;width:100%;padding:12px;border:2px solid var(--bd);border-rad
 const CFG={apiKey:"AIzaSyCIvffrClPs-qR-WqVNirr8-n7LqsjGtio",authDomain:"prova-de-instrucao.firebaseapp.com",databaseURL:"https://prova-de-instrucao-default-rtdb.firebaseio.com",projectId:"prova-de-instrucao",appId:"1:720424141498:web:ac9557168acf5a37a2f883"};
 const SENHA="102030";
 const $=id=>document.getElementById(id);
-const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const esc=t=>String(t||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const f1=x=>x.toFixed(1).replace(".",",");
 let DB=null,D={};
-function rend(){const ids=Object.keys(D).sort((a,b)=>D[a].ts-D[b].ts);
+function rend(){const ids=Object.keys(D).sort((a,b)=>(D[a].ts||0)-(D[b].ts||0));
  const T=i=>Object.values(D[i].tentativas||{}),fez=ids.filter(i=>T(i).length),ap=fez.filter(i=>T(i).some(x=>x.n>=8));
  $("as").textContent=`${ids.length} aluno(s) · ${ids.filter(i=>D[i].status==="aprovado").length} liberado(s) · ${fez.length} fizeram a prova · ${ap.length} aprovado(s)`;
  $("al").innerHTML=ids.length?ids.map(i=>{const r=D[i],t=T(i),st=r.status;
  return `<div class="rev"><b>${esc(r.nome)}</b> · <i>${st==="aprovado"?"Liberado":st==="negado"?"Negado":"Aguardando"}</i><br>`+
  (t.length?t.map(x=>`<span class="${x.n>=8?"ok":"er"}">${f1(x.n)} (${x.h}/20)</span>`).join(" · "):`<span style="color:var(--mu)">Sem prova feita</span>`)+
- `<br><button class="opt sm" data-i="${i}" data-s="aprovado">Aprovar entrada</button><button class="opt sm" data-i="${i}" data-s="negado">Negar</button><button class="opt sm" data-i="${i}" data-s="x">Excluir</button></div>`}).join(""):"<p>Nenhum aluno solicitou entrada ainda.</p>"}
+ `<br><button class="opt sm" data-i="${i}" data-s="aprovado">Aprovar entrada</button><button class="opt sm" data-i="${i}" data-s="negado">Negar</button><button class="opt sm" data-i="${i}" data-s="x">Excluir</button></div>`}).join(""):`<p>Nenhum aluno solicitou entrada ainda.</p>`}
 $("en").onclick=()=>{if($("pw").value!==SENHA){$("er").textContent="Senha incorreta.";return}
  if(CFG.apiKey.startsWith("COLE")){$("er").textContent="Configure o Firebase no arquivo (CFG).";return}
- try{firebase.initializeApp(CFG);DB=firebase.database()}catch(e){$("er").textContent="Erro ao conectar ao banco.";return}
+ try{if(!firebase.apps.length)firebase.initializeApp(CFG);DB=firebase.database()}catch(e){$("er").textContent="Erro ao conectar ao banco.";return}
  $("lg").classList.add("hide");$("pn").classList.remove("hide");
  DB.ref("alunos").on("value",q=>{D=q.val()||{};rend()})};
 $("pw").onkeydown=e=>{if(e.key==="Enter")$("en").click()};
