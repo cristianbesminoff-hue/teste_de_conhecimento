@@ -1,58 +1,49 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
+<html lang="pt-BR"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Prova Técnica Unifique - Aluno</title>
 <style>
-:root{box-sizing:border-box;--bg:#f5f7fb;--card:#fff;--tx:#1d1d4f;--mu:#666a8a;--ac:#00aeef;--bd:#d8dcec;--ok:#1e9e5a;--er:#d6364a}
-body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,sans-serif;line-height:1.45}
-main{max-width:600px;margin:0 auto;padding:16px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px;margin-bottom:16px}
-h1,h2{color:var(--ac);margin-top:0}
-button{font:inherit;cursor:pointer;background:var(--ac);color:#fff;border:0;border-radius:8px;padding:12px 20px;font-weight:700;width:100%;text-align:center;margin-top:10px}
-button:disabled{background:var(--mu);opacity:0.6;cursor:not-allowed}
-input{font:inherit;width:100%;padding:12px;border:1px solid var(--bd);border-radius:8px;box-sizing:border-box;margin-bottom:10px}
-.opt{background:var(--bg);border:1px solid var(--bd);padding:12px;border-radius:8px;margin-bottom:8px;cursor:pointer;transition:0.2s}
-.opt:hover{border-color:var(--ac);background:#eef9ff}
-.opt.selected{background:var(--ac);color:#fff;border-color:var(--ac)}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f5f7fb;--card:#fff;--tx:#1d1d4f;--mu:#666a8a;--ac:#00aeef;--bd:#d8dcec;--ok:#1e9e5a;--er:#d6364a}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10122a;--card:#1a1d3d;--tx:#eef0ff;--mu:#a3a8cc;--bd:#33376a}}
+:root[data-theme="dark"]{--bg:#10122a;--card:#1a1d3d;--tx:#eef0ff;--mu:#a3a8cc;--bd:#33376a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.45}
+main{max-width:640px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px}
+h1{font-size:1.5rem;margin:0 0 8px;color:var(--ac)}
+p{color:var(--mu)}
+button{font:inherit;cursor:pointer}
+input{font:inherit;width:100%;padding:12px;border:2px solid var(--bd);border-radius:12px;background:transparent;color:var(--tx)}
+.sm{display:inline-block;width:auto;padding:6px 12px;margin:6px 6px 0 0;font-size:.9rem}
+.go{background:var(--ac);color:#fff;border:0;border-radius:12px;padding:14px 22px;font-weight:700;width:100%;margin-top:12px}
+.go:disabled{opacity:.4;cursor:not-allowed}
+.opt{display:block;width:100%;text-align:left;background:transparent;color:var(--tx);border:2px solid var(--bd);border-radius:12px;padding:12px 14px;margin:8px 0}
+.opt.sel{border-color:var(--ac);background:rgba(0,174,239,.12)}
+.bar{height:8px;background:var(--bd);border-radius:8px;overflow:hidden;margin:6px 0 16px}
+.bar i{display:block;height:100%;background:var(--ac)}
+.q{font-size:1.1rem;font-weight:600;margin:0 0 8px}
+.big{font-size:3rem;font-weight:800;margin:4px 0}
+.ok{color:var(--ok)}.er{color:var(--er)}
+.rev{border-top:1px solid var(--bd);padding:10px 0;font-size:.92rem}
 .hide{display:none}
-.center{text-align:center}
-.badge{background:var(--bg);padding:6px 12px;border-radius:6px;font-size:0.9rem;color:var(--mu);margin-bottom:12px;display:inline-block}
-</style>
-</head>
-<body>
-<main>
-  <div id="ecra-id" class="card">
-    <h1>Prova Técnica Unifique</h1>
-    <p>Identifique-se para iniciar a avaliação. Serão sorteadas 20 questões aleatórias do banco. O instrutor precisa de aprovar o seu acesso.</p>
-    <input type="text" id="input-nome" placeholder="Digite o seu Nome Completo">
-    <div id="nq" class="badge">A carregar questões...</div>
-    <button id="bs" onclick="registarAluno()">Entrar e Iniciar Prova</button>
-    <div id="msg-status" class="center" style="margin-top:12px;font-weight:600;color:var(--mu)"></div>
-  </div>
-
-  <div id="ecra-prova" class="card hide">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <span id="progresso" class="badge">Questão 1 de 20</span>
-    </div>
-    <h2 id="enunciado">A carregar pergunta...</h2>
-    <div id="container-opcoes"></div>
-    <button id="btn-responder" onclick="proximaQuestao()" class="hide">Seguinte</button>
-  </div>
-
-  <div id="ecra-resultado" class="card hide center">
-    <h1>Prova Concluída!</h1>
-    <p id="texto-resultado"></p>
-    <button onclick="window.location.reload()">Terminar / Sair</button>
-  </div>
+</style></head><body><main>
+<div id="gate" class="card"><h1>Prova Técnica Unifique</h1><p id="gm">Carregando…</p>
+<div id="gf" class="hide"><input id="nm" placeholder="Seu nome completo" maxlength="60"><button class="go" id="gj">Solicitar entrada</button></div>
+<button class="go hide" id="gt" style="background:var(--mu)">Modo treino (sem registro)</button>
+</div>
+<div id="start" class="card hide"><h1>Prova Técnica Unifique</h1>
+<p>Instalação e manutenção · Atendimento, mesh e fixação</p>
+<p>• 20 questões sorteadas de um banco de <span id="nq"></span><br>• Múltipla escolha, 5 opções<br>• Nota de 0 a 10 · Aprovação com média 8,0<br>• Sem voltar: responda e avance</p>
+<button class="go" id="bs">Começar a prova</button></div>
+<div id="quiz" class="card hide"><div id="ct" style="color:var(--mu);font-size:.9rem"></div><div class="bar"><i id="pb"></i></div>
+<p class="q" id="qt"></p><div id="ops"></div><button class="go" id="nx" disabled>Próxima</button></div>
+<div id="res" class="card hide"></div>
 </main>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
-// --- LISTA COMPLETA DE QUESTÕES ---
-const RAW = `Quantos cabos flat cada ranhura da roldana nova comporta?|2|1|3|4|8
+const RAW=`Quantos cabos flat cada ranhura da roldana nova comporta?|2|1|3|4|8
 Quantos clientes cada roldana nova de flats acomoda?|Até 16|Até 8|Até 12|Até 4|Até 20
 Em mudança de direção em 90º com flats, o que é obrigatório?|Duas alças|Uma alça|Spiral Tube|Suporte dielétrico|Roldana extra
 A roldana antiga suporta até:|8 cabos|4 cabos|16 cabos|12 cabos|2 cabos
@@ -135,9 +126,9 @@ Como o técnico deve se apresentar ao ser atendido pelo cliente?|Cumprimentar, d
 Ninguém atende no local. Qual o procedimento?|Campainha ou palmas, tentar contato, acionar o bot e deixar o Comunicado de Visita|Entrar pelo portão e esperar|Fotografar a fachada e ir embora|Cancelar a OS sem avisar|Ligar para outro cliente
 Quem atende é um menor de idade. O correto é:|Explicar que não pode entrar, deixar o "Estivemos aqui!" e avisar a Unidade|Fazer o serviço normalmente|Pedir que chame um vizinho|Entrar só no quintal|Fotografar o menor
 Se quem atende NÃO é o titular, o técnico deve:|Perguntar nome e grau de parentesco e registrar o documento na OS|Recusar o atendimento|Ignorar o documento|Pedir o CPF do titular por telefone|Cobrar uma taxa
-Se a pessoa não disponibilizar o documento:|O serviço é feito e a informação anotada na OS|O serviço é cancelado|O técnico exige à força|O cliente é multado|A visita é pendenediada
+Se a pessoa não disponibilizar o documento:|O serviço é feito e a informação anotada na OS|O serviço é cancelado|O técnico exige à força|O cliente é multado|A visita é pendenciada
 A proteção de calçado é obrigatória em:|Todas as visitas, instalação ou manutenção|Só na instalação|Só na manutenção|Só em casa com carpete|Só quando o cliente pedir
-Em visitas de manutenção, o técnico deve perguntar:|Em qual cômodo o equipamento está instalado|Quanto o cliente paga de internet|Se o cliente tem Netflix|Qual la idade do cliente|Se há animais na casa
+Em visitas de manutenção, o técnico deve perguntar:|Em qual cômodo o equipamento está instalado|Quanto o cliente paga de internet|Se o cliente tem Netflix|Qual a idade do cliente|Se há animais na casa
 Ao tirar foto do equipamento:|Não deve aparecer mais nada na imagem|Deve aparecer o cliente|Deve aparecer a fachada|Pode ser foto de outro celular|Deve aparecer o endereço
 No teste de velocidade, o técnico pode:|Usar o dispositivo do cliente, desde que ele permita|Usar sempre o próprio celular pessoal|Dispensar o teste|Testar sem avisar o cliente|Usar o computador do vizinho
 Ao finalizar o atendimento, o técnico deve:|Deixar o local limpo, recolher seus materiais e perguntar se pode ajudar em algo mais|Sair rapidamente sem falar|Deixar sobras de cabo no local|Pedir avaliação 5 ao cliente|Cobrar gorjeta
@@ -149,8 +140,8 @@ Toda verificação interna na casa do cliente exige:|Acompanhamento do cliente|A
 Em quedas de conexão, uma das primeiras perguntas é:|O problema ocorre por cabo ou por Wi-Fi?|Qual a cor do roteador?|Quantos anos tem a casa?|Quem instalou a fibra?|Quanto o cliente paga?
 Cliente com IPTV de terceiros reclama de lentidão. O técnico deve:|Informar que a Unifique não limita nem bloqueia e que a instabilidade pode estar na hospedagem do serviço|Dizer que o serviço é pirata|Bloquear o serviço|Cancelar a visita|Trocar a ONU sem testar
 Se não consegue resolver por falta de equipamento ou alcance, o técnico:|Avisa a unidade pedindo auxílio ou nova visita|Deixa o cliente sem retorno|Pega equipamento de outro cliente|Fecha a OS como resolvida|Cobra visita extra
-Ao trocar o equipamento, o técnico deve explicar ao cliente:|As diferenças de frequência do sinal|O preço do equipamento|A marca del vizinho|Nada, pois é indiferente|Como abrir o equipamento
-Em ausência do cliente, a foto no app deve ser:|Apenas do cartão "Estivemos aqui"|Da fachada|Do número da casa|Da rua|Da poste
+Ao trocar o equipamento, o técnico deve explicar ao cliente:|As diferenças de frequência do sinal|O preço do equipamento|A marca do vizinho|Nada, pois é indiferente|Como abrir o equipamento
+Em ausência do cliente, a foto no app deve ser:|Apenas do cartão "Estivemos aqui"|Da fachada|Do número da casa|Da rua|Do poste
 Quem indica o ponto de perfuração na parede:|Assume a responsabilidade por danos a elementos não visíveis|Nunca tem responsabilidade|É sempre o técnico|É sempre a Unifique|É o supervisor
 No fechamento, marcar "Problema resolvido: SIM" só se:|A solicitação foi totalmente atendida|O técnico terminou o horário|O cliente estava satisfeito|Houve troca de equipamento|Passou mais de 1 hora
 Quais ordens de serviço são pagas?|Apenas as executadas|Também clientes ausentes|Também pendenciadas|Todas agendadas|Só as de manutenção
@@ -161,165 +152,52 @@ Qual a preferência na instalação do mesh?|Por cabo de rede|Por Wi-Fi|Por rád
 Ativar mesh via Wi-Fi (sem cabo) é permitido:|Em cenários específicos, com autorização prévia do líder de Ativação e Manutenção|Sempre|Nunca|Se o cliente preferir|Se o técnico estiver com pressa
 Em qual porta os equipamentos mesh devem ser conectados?|WAN dos roteadores|LAN dos roteadores|RJ11|USB|Console
 Sobre marcas no mesh:|Usar equipamentos da mesma marca (exceto ZTE F670L com TP-Link HC220-G5)|Misturar qualquer marca|Só ZTE com ZTE e TP-Link com TP-Link, sem exceção|Qualquer marca com cabo Cat6|Só Mikrotik
-É permitido instalar agentes mesh em outra residência?|Não, apenas em extensões da casa del cliente (edícula, quiosque)|Sim, no vizinho|Sim, se o vizinho pedir|Sim, com Wi-Fi|Sim, no prédio ao lado
+É permitido instalar agentes mesh em outra residência?|Não, apenas em extensões da casa do cliente (edícula, quiosque)|Sim, no vizinho|Sim, se o vizinho pedir|Sim, com Wi-Fi|Sim, no prédio ao lado
 Roteador TP-Link com LED branco/verde estático indica:|Configurado e conectado à internet|Falha no equipamento|Atualizando firmware|Conexão perdida|Reiniciando
-Onde posicionar o roteador para melhor sinal?|Local central, elevado e com o mínimo de obstáculos|Atrás da TV|Dentro de armário metálico|No chão del canto|Junto ao micro-ondas
+Onde posicionar o roteador para melhor sinal?|Local central, elevado e com o mínimo de obstáculos|Atrás da TV|Dentro de armário metálico|No chão do canto|Junto ao micro-ondas
 Apps como Wi-Fi Analyzer e WiFiman servem para:|Medir o sinal e achar o melhor local de instalação|Ativar a ONU|Medir potência óptica|Abrir a OS|Baixar materiais
-A sincronização via WPS del mesh pode levar:|1 a 2 minutos|10 segundos|30 minutos|2 horas|1 dia
+A sincronização via WPS do mesh pode levar:|1 a 2 minutos|10 segundos|30 minutos|2 horas|1 dia
 O cabo de sinal pode ser usado em:|Áreas internas, até 50 m (FTTB, mesh, TV, fastpoint)|Câmeras com PoE|Áreas externas|Qualquer distância|Equipamentos com fonte PoE
 Qual ferragem é usada para fixar a roldana de 8 vias?|BAP|Fita de aço sem BAP|Prego|Cola|Arame de espina
 O suporte Mini PT é fixado no poste padrão com:|Cinta + fecho de aço inox|BAP|Parafuso J|Arame|Cola
 Um poste comporta BAP 2. Usar BAP 3 é:|Desperdício de material|Obrigatório|Mais seguro e recomendado|Proibido por norma elétrica|Indiferente
 A BAP é tensionada no poste com:|Parafuso J|Fita inox|Arame|Prego|Cola
-A BAP pode ser instalada por cima de outros elementos del poste?|Não|Sim|Só de outras operadoras|Só em poste de madeira|Só com autorização del cliente
-O olhal deve ser instalado:|Nas faces del poste, nunca nos cantos|Nos cantos|Na ponta del parafuso|Só na rua|Em qualquer lugar`;
+A BAP pode ser instalada por cima de outros elementos do poste?|Não|Sim|Só de outras operadoras|Só em poste de madeira|Só com autorização do cliente
+O olhal deve ser instalado:|Nas faces do poste, nunca nos cantos|Nos cantos|Na ponta do parafuso|Só na rua|Em qualquer lugar`;
+const Q=RAW.split("\n").map(l=>l.split("|")).filter(a=>a.length==6);
+const $=id=>document.getElementById(id);$("nq").textContent=Q.length+" questões";
+const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+let T,i,sel,hits,log;
+function show(id){["gate","start","quiz","res"].forEach(x=>$(x).classList.toggle("hide",x!=id))}
+function start(){T=sh(Q).slice(0,20).map(a=>({q:a[0],c:a[1],o:sh(a.slice(1))}));i=0;hits=0;log=[];show("quiz");draw()}
+function draw(){const t=T[i];sel=null;$("ct").textContent=`Questão ${i+1} de 20`;$("pb").style.width=(i/20*100)+"%";$("qt").textContent=t.q;
+$("ops").innerHTML="";t.o.forEach(o=>{const b=document.createElement("button");b.className="opt";b.textContent=o;b.onclick=()=>{sel=o;[...$("ops").children].forEach(x=>x.classList.toggle("sel",x===b));$("nx").disabled=false};$("ops").appendChild(b)});
+$("nx").disabled=true;$("nx").textContent=i==19?"Finalizar prova":"Próxima"}
+function next(){const t=T[i];if(sel===t.c)hits++;else log.push({q:t.q,r:sel,c:t.c});i++;i<20?draw():end()}
+function end(){const n=(hits/20*10),ok=n>=8;show("res");report(n);
+$("res").innerHTML=`<h1>${ok?"Aprovado! 🎉":"Reprovado"}</h1><div class="big ${ok?"ok":"er"}">${n.toFixed(1).replace(".",",")}</div><p>${hits} de 20 acertos · média mínima 8,0</p>`+
+(log.length?`<h3>Revisão dos erros</h3>`+log.map(e=>`<div class="rev"><b>${e.q}</b><br><span class="er">Sua resposta: ${e.r}</span><br><span class="ok">Correta: ${e.c}</span></div>`).join(""):`<p class="ok">Gabaritou! Nenhum erro.</p>`)+
+`<button class="go" onclick="start()">Fazer nova prova (20 novas sorteadas)</button>`}
+$("bs").onclick=start;$("nx").onclick=next;
 
-let Q = [];
-let alunoId = localStorage.getItem("alunoId") || null;
-let nomeAluno = localStorage.getItem("nomeAluno") || "";
-let questaoAtual = 0;
-let respostasDadas = [];
-let dbOk = false;
-let DB, CFG = {apiKey:"AIzaSyCIvffrClPs-qR-WqVNirr8-n7LqsjGtio",authDomain:"prova-de-instrucao.firebaseapp.com",databaseURL:"https://prova-de-instrucao-default-rtdb.firebaseio.com",projectId:"prova-de-instrucao",appId:"1:720424141498:web:ac9557168acf5a37a2f883"};
-
-const $ = id => document.getElementById(id);
-
-function init() {
-  try {
-    // 1. Lê todas as questões do RAW
-    let todasAsQuestoes = RAW.split("\n").map(l => l.split("|")).filter(a => a.length === 6);
-    
-    // 2. Embaralha todas as questões aleatoriamente (Algoritmo Fisher-Yates)
-    for (let i = todasAsQuestoes.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1));
-      [todasAsQuestoes[i], todasAsQuestoes[j]] = [todasAsQuestoes[j], todasAsQuestoes[i]];
-    }
-
-    // 3. Seleciona apenas as primeiras 20 questões para esta sessão do aluno
-    Q = todasAsQuestoes.slice(0, 20);
-
-    $("nq").textContent = `${Q.length} questões sorteadas (de um banco de ${todasAsQuestoes.length})`;
-  } catch(e) {
-    $("nq").textContent = "Erro ao sortear questões";
-  }
-
-  if (nomeAluno) $("input-nome").value = nomeAluno;
-
-  try {
-    firebase.initializeApp(CFG);
-    DB = firebase.database();
-    dbOk = true;
-    if (alunoId) verificarStatusAluno();
-  } catch (e) {
-    console.warn("Modo offline ativado.", e);
-  }
-}
-
-function registarAluno() {
-  const nome = $("input-nome").value.trim();
-  if (nome.length < 3) { alert("Por favor, digite o seu nome completo."); return; }
-  nomeAluno = nome;
-  localStorage.setItem("nomeAluno", nome);
-
-  if (!dbOk) { iniciarProva(); return; }
-
-  $("bs").disabled = true;
-  $("bs").textContent = "A aguardar aprovação do instrutor...";
-
-  if (!alunoId) {
-    const refNovo = DB.ref("alunos").push();
-    alunoId = refNovo.key;
-    localStorage.setItem("alunoId", alunoId);
-    refNovo.set({ nome: nomeAluno, status: "pendente", timestamp: Date.now() });
-  } else {
-    DB.ref("alunos/" + alunoId).update({ nome: nomeAluno, status: "pendente" });
-  }
-
-  verificarStatusAluno();
-}
-
-function verificarStatusAluno() {
-  DB.ref("alunos/" + alunoId).on("value", snapshot => {
-    const dados = snapshot.val();
-    if (!dados) {
-      alunoId = null;
-      localStorage.removeItem("alunoId");
-      $("bs").disabled = false;
-      $("bs").textContent = "Entrar e Iniciar Prova";
-      return;
-    }
-
-    if (dados.status === "aprovado") {
-      iniciarProva();
-    } else if (dados.status === "negado") {
-      $("msg-status").textContent = "Acesso negado pelo instrutor.";
-      $("bs").disabled = false;
-      $("bs").textContent = "Tentar Novamente";
-    } else {
-      $("msg-status").textContent = "Aguardando o instrutor liberar o seu acesso...";
-    }
-  });
-}
-
-function iniciarProva() {
-  $("ecra-id").classList.add("hide");
-  $("ecra-prova").classList.remove("hide");
-  carregarQuestao();
-}
-
-function carregarQuestao() {
-  if (questaoAtual >= Q.length) { finalizarProva(); return; }
-  $("progresso").textContent = `Questão ${questaoAtual + 1} de ${Q.length}`;
-  const q = Q[questaoAtual];
-  $("enunciado").textContent = q[0];
-
-  // Mistura também a ordem das alternativas (correta e incorretas) de cada questão
-  let opcoes = [q[1], q[2], q[3], q[4], q[5]];
-  opcoes.sort(() => Math.random() - 0.5);
-
-  const container = $("container-opcoes");
-  container.innerHTML = "";
-  $("btn-responder").classList.add("hide");
-
-  opcoes.forEach(opt => {
-    const div = document.createElement("div");
-    div.className = "opt";
-    div.textContent = opt;
-    div.onclick = () => selecionarOpcao(div, opt, q[1]);
-    container.appendChild(div);
-  });
-}
-
-function selecionarOpcao(elemento, escolhida, correta) {
-  document.querySelectorAll(".opt").forEach(el => el.classList.remove("selected"));
-  elemento.classList.add("selected");
-  respostasDadas[questaoAtual] = { escolhida, correta, acertou: escolhida === correta };
-  $("btn-responder").classList.remove("hide");
-}
-
-function proximaQuestao() { questaoAtual++; carregarQuestao(); }
-
-function finalizarProva() {
-  $("ecra-prova").classList.add("hide");
-  $("ecra-resultado").classList.remove("hide");
-
-  const acertos = respostasDadas.filter(r => r.acertou).length;
-  const total = Q.length;
-  const percentual = Math.round((acertos / total) * 100);
-
-  $("texto-resultado").innerHTML = `Parabéns, <b>${nomeAluno}</b>!<br>Acertou <b>${acertos}</b> de <b>${total}</b> questões (${percentual}%).`;
-
-  if (dbOk && alunoId) {
-    DB.ref("alunos/" + alunoId).update({
-      status: "concluido",
-      acertos: acertos,
-      total: total,
-      percentual: percentual
-    });
-  }
-}
-
-window.onload = init;
-</script>
-</body>
-</html>
+const CFG={apiKey:"AIzaSyCIvffrClPs-qR-WqVNirr8-n7LqsjGtio",authDomain:"prova-de-instrucao.firebaseapp.com",databaseURL:"https://prova-de-instrucao-default-rtdb.firebaseio.com",projectId:"prova-de-instrucao",appId:"1:720424141498:web:ac9557168acf5a37a2f883"};
+let DB=null,ID=null,R0=null;
+try{ID=localStorage.getItem("alunoId")}catch(e){}
+const ok=!CFG.apiKey.startsWith("COLE");
+function gmsg(t,form){$("gm").textContent=t;$("gf").classList.toggle("hide",!form)}
+function report(n){if(DB&&R0)DB.ref("alunos/"+ID+"/tentativas").push({n,h:hits,t:Date.now(),erros:log.map(e=>({q:e.q,r:e.r||"",c:e.c}))}).catch(()=>{})}
+function gupd(){if(!$("quiz").classList.contains("hide")||!$("res").classList.contains("hide"))return;
+ if(!R0){show("gate");gmsg("Informe seu nome para solicitar entrada na prova.",true)}
+ else if(R0.status==="aprovado")show("start");
+ else{show("gate");gmsg(R0.status==="negado"?"Sua entrada foi negada pelo instrutor. Fale com ele.":"Olá, "+R0.nome+"! Aguardando o instrutor aprovar sua entrada…",false)}}
+function watch(){DB.ref("alunos/"+ID).on("value",s=>{R0=s.val();gupd()})}
+function init(){
+ if(!ok){gmsg("Firebase não configurado. Você pode treinar sem registro.",false);$("gt").classList.remove("hide");return}
+ try{firebase.initializeApp(CFG);DB=firebase.database()}catch(e){gmsg("Erro ao conectar ao banco de dados.",false);$("gt").classList.remove("hide");return}
+ if(ID)watch();else gupd()}
+$("gj").onclick=()=>{const n=$("nm").value.trim();if(n.length<3||!DB)return;
+ ID=DB.ref("alunos").push().key;try{localStorage.setItem("alunoId",ID)}catch(e){}
+ DB.ref("alunos/"+ID).set({nome:n,status:"pendente",ts:Date.now()}).then(watch).catch(()=>gmsg("Não foi possível enviar. Tente de novo.",true))};
+$("gt").onclick=()=>show("start");
+init();
+</script></body></html>
