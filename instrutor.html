@@ -40,26 +40,45 @@ const SENHA="102030";
 const $=id=>document.getElementById(id);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const f1=x=>x.toFixed(1).replace(".",",");
-let DB=null,D={};
 const dt=x=>new Date(x).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
-const att=x=>{const e=Object.values(x.erros||{});return `<details style="margin:6px 0"><summary class="${x.n>=8?"ok":"er"}" style="cursor:pointer"><b>${f1(x.n)}</b> (${x.h}/20) · ${x.n>=8?"Aprovado":"Reprovado"} · ${dt(x.t)}</summary>`+
-(e.length?e.map(y=>`<div style="margin:8px 0 0 12px;font-size:.88rem"><b>${esc(y.q)}</b><br><span class="er">Respondeu: ${esc(y.r)}</span><br><span class="ok">Correta: ${esc(y.c)}</span></div>`).join(""):x.h<20?`<div style="margin:8px 0 0 12px;color:var(--mu)">Sem detalhes desta tentativa.</div>`:`<div class="ok" style="margin:8px 0 0 12px">Gabaritou, nenhum erro.</div>`)+`</details>`};
-function rend(){const ids=Object.keys(D).sort((a,b)=>D[a].ts-D[b].ts);
- const T=i=>Object.values(D[i].tentativas||{}),fez=ids.filter(i=>T(i).length),ap=fez.filter(i=>T(i).some(x=>x.n>=8));
- $("as").textContent=`${ids.length} aluno(s) · ${ids.filter(i=>D[i].status==="aprovado").length} liberado(s) · ${fez.length} fizeram a prova · ${ap.length} aprovado(s)`;
- const M={};ids.forEach(i=>T(i).forEach(a=>Object.values(a.erros||{}).forEach(y=>M[y.q]=(M[y.q]||0)+1)));
+let DB=null,D={};
+const TT=r=>Object.values(r.tentativas||{}).sort((a,b)=>a.t-b.t);
+const wrong=x=>x.resp?Object.values(x.resp).filter(y=>y.r!==y.c):Object.values(x.erros||{});
+const bx=(ok,k,y)=>`<div style="margin:8px 0 0 8px;padding:8px 10px;border-left:4px solid var(--${ok?"ok":"er"});background:${ok?"rgba(30,158,90,.12)":"rgba(214,54,74,.12)"};border-radius:6px;font-size:.88rem"><b>${k}${esc(y.q)}</b><br>`+(ok?`<span class="ok">✔ ${esc(y.c)}</span>`:`<span class="er">✘ Respondeu: ${esc(y.r)}</span><br><span class="ok">✔ Correta: ${esc(y.c)}</span>`)+`</div>`;
+const att=x=>{const R=Object.values(x.resp||{});
+ const body=R.length?R.map((y,k)=>bx(y.r===y.c,(k+1)+". ",y)).join(""):wrong(x).length?wrong(x).map(y=>bx(false,"",y)).join(""):x.h<20?`<div style="margin:8px 0 0 8px;color:var(--mu)">Sem detalhes desta tentativa.</div>`:`<div class="ok" style="margin:8px 0 0 8px">Gabaritou, nenhum erro.</div>`;
+ return `<details style="margin:6px 0"><summary class="${x.n>=8?"ok":"er"}" style="cursor:pointer"><b>${f1(x.n)}</b> (${x.h}/${R.length||20}) · ${x.n>=8?"Aprovado":"Reprovado"} · ${dt(x.t)}</summary>${body}</details>`};
+const bt=(a,i,t)=>`<button class="opt sm" data-a="${a}" data-i="${i}">${t}</button>`;
+const sec=(t,a,f)=>a.length?`<h3 style="margin:18px 0 4px">${t} (${a.length})</h3>`+a.map(f).join(""):"";
+function rend(){const ids=Object.keys(D).sort((a,b)=>D[a].ts-D[b].ts),st=i=>D[i].status;
+ const P=ids.filter(i=>!["liberada","enviada","encerrado"].includes(st(i))),F=ids.filter(i=>st(i)==="liberada"),R=ids.filter(i=>st(i)==="enviada"),E=ids.filter(i=>st(i)==="encerrado");
+ $("as").textContent=`${P.length} aguardando · ${F.length} fazendo a prova · ${R.length} com resultado · ${E.length} encerrado(s)`;
+ const M={};ids.forEach(i=>TT(D[i]).forEach(a=>wrong(a).forEach(y=>M[y.q]=(M[y.q]||0)+1)));
  const tp=Object.entries(M).sort((a,b)=>b[1]-a[1]).slice(0,5);
- $("tp").innerHTML=tp.length?`<details class="rev" open><summary><b>Questões mais erradas da turma</b></summary>`+tp.map(([q,c])=>`<div style="margin-top:6px;font-size:.88rem">${c}× · ${esc(q)}</div>`).join("")+`</details>`:"";
- $("al").innerHTML=ids.length?ids.map(i=>{const r=D[i],t=T(i),st=r.status;
- return `<div class="rev"><b>${esc(r.nome)}</b> · <i>${st==="aprovado"?"Liberado":st==="negado"?"Negado":"Aguardando"}</i><br>`+
- (t.length?t.sort((a,b)=>a.t-b.t).map(att).join(""):`<span style="color:var(--mu)">Sem prova feita</span>`)+
- `<br><button class="opt sm" data-i="${i}" data-s="aprovado">Aprovar entrada</button><button class="opt sm" data-i="${i}" data-s="negado">Negar</button><button class="opt sm" data-i="${i}" data-s="x">Excluir</button></div>`}).join(""):"<p>Nenhum aluno solicitou entrada ainda.</p>"}
+ $("tp").innerHTML=tp.length?`<details class="rev"><summary><b>Questões mais erradas da turma</b></summary>`+tp.map(([q,c])=>`<div style="margin-top:6px;font-size:.88rem">${c}× · ${esc(q)}</div>`).join("")+`</details>`:"";
+ $("al").innerHTML=ids.length?
+ sec("Aguardando aprovação",P,i=>`<div class="rev"><b>${esc(D[i].nome)}</b>${st(i)==="negado"?" · <i>Negado</i>":""}<br>${bt("ap",i,"Aprovar entrada")}${st(i)==="negado"?"":bt("ng",i,"Negar")}</div>`)+
+ sec("Fazendo a prova",F,i=>`<div class="rev"><b>${esc(D[i].nome)}</b> · <i>respondendo… (prova ${D[i].rodada||1})</i></div>`)+
+ sec("Resultados",R,i=>{const r=D[i],t=TT(r),l=t[t.length-1];if(!l)return `<div class="rev"><b>${esc(r.nome)}</b> · <i>recebendo dados…</i></div>`;const ap=l.n>=8;
+  return `<div class="rev"><b>${esc(r.nome)}</b> · <span class="${ap?"ok":"er"}"><b>${f1(l.n)}</b> · ${ap?"Aprovado":"Reprovado"}</span> · ${t.length} tentativa(s)${t.map(att).join("")}`+(ap?bt("pdf",i,"Imprimir PDF")+bt("enc",i,"Encerrar cadastro"):bt("nova",i,"Refazer: gerar nova prova"))+`</div>`})+
+ sec("Cadastros encerrados",E,i=>{const t=TT(D[i]),l=t[t.length-1];return `<div class="rev"><b>${esc(D[i].nome)}</b> · <span class="ok">${l?f1(l.n):""}</span><br>${bt("pdf",i,"Imprimir PDF")}${bt("del",i,"Excluir")}</div>`})
+ :"<p>Nenhum aluno solicitou entrada ainda.</p>"}
+function imprimir(i){const r=D[i],t=TT(r),l=[...t].reverse().find(x=>x.n>=8)||t[t.length-1];if(!l)return;const R=Object.values(l.resp||{});
+ const w=window.open("","_blank");if(!w){alert("Libere os pop-ups do navegador para imprimir.");return}
+ w.document.write(`<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>Comprovante - ${esc(r.nome)}</title><style>body{font-family:system-ui,sans-serif;max-width:760px;margin:28px auto;padding:0 18px;color:#1d1d4f;-webkit-print-color-adjust:exact;print-color-adjust:exact}h1{color:#00aeef;margin-bottom:4px}.k{display:flex;gap:16px;margin:14px 0;flex-wrap:wrap}.k div{border:1px solid #ccd;border-radius:10px;padding:8px 14px}.k b{display:block;font-size:1.4rem}.q{margin:6px 0;padding:6px 10px;border-left:4px solid;font-size:.88rem;break-inside:avoid}.g{border-color:#1e9e5a;background:#e8f6ee}.e{border-color:#d6364a;background:#fdeaec}.s{display:flex;gap:40px;margin-top:60px}.s div{flex:1;border-top:1px solid #333;text-align:center;padding-top:4px;font-size:.85rem}</style><h1>Comprovante de aprovação</h1><p>Treinamento de Instalação e Manutenção · Unifique</p><p>Aluno: <b>${esc(r.nome)}</b></p><div class="k"><div>Nota<b>${f1(l.n)}</b></div><div>Acertos<b>${l.h}/${R.length||20}</b></div><div>Data<b style="font-size:1rem">${dt(l.t)}</b></div><div>Tentativas<b>${t.length}</b></div></div><h3>Prova realizada</h3>`+
+ (R.length?R.map((y,k)=>`<div class="q ${y.r===y.c?"g":"e"}"><b>${k+1}. ${esc(y.q)}</b><br>${y.r===y.c?"✔ "+esc(y.c):"✘ Respondeu: "+esc(y.r)+"<br>✔ Correta: "+esc(y.c)}</div>`).join(""):"<p>Sem detalhes.</p>")+`<div class="s"><div>Instrutor</div><div>Aluno</div></div>`);
+ w.document.close();w.focus();setTimeout(()=>w.print(),400)}
 $("en").onclick=()=>{if($("pw").value!==SENHA){$("er").textContent="Senha incorreta.";return}
  if(CFG.apiKey.startsWith("COLE")){$("er").textContent="Configure o Firebase no arquivo (CFG).";return}
  try{firebase.initializeApp(CFG);DB=firebase.database()}catch(e){$("er").textContent="Erro ao conectar ao banco.";return}
  $("lg").classList.add("hide");$("pn").classList.remove("hide");
  DB.ref("alunos").on("value",q=>{D=q.val()||{};rend()})};
 $("pw").onkeydown=e=>{if(e.key==="Enter")$("en").click()};
-$("al").onclick=e=>{const b=e.target.closest("button[data-i]");if(!b)return;const r=DB.ref("alunos/"+b.dataset.i);
- if(b.dataset.s==="x"){if(confirm("Excluir este aluno?"))r.remove()}else r.update({status:b.dataset.s})};
+$("al").onclick=e=>{const b=e.target.closest("button[data-a]");if(!b)return;const i=b.dataset.i,a=b.dataset.a,r=DB.ref("alunos/"+i),x=D[i]||{};
+ if(a==="ap")r.update({status:"liberada",rodada:(x.rodada||0)+1,atual:null});
+ else if(a==="nova"){if(confirm("Gerar uma nova prova com 20 questões diferentes para este aluno?"))r.update({status:"liberada",rodada:(x.rodada||0)+1,atual:null})}
+ else if(a==="ng")r.update({status:"negado"});
+ else if(a==="enc"){if(confirm("Encerrar o cadastro deste aluno?"))r.update({status:"encerrado"})}
+ else if(a==="pdf")imprimir(i);
+ else if(a==="del"){if(confirm("Excluir este aluno?"))r.remove()}};
 </script></body></html>
