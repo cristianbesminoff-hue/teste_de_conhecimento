@@ -1,197 +1,65 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
+<html lang="pt-BR"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Painel do Instrutor - Prova Técnica</title>
+<title>Prova Técnica Unifique - Instrutor</title>
 <style>
-:root{box-sizing:border-box;--bg:#f5f7fb;--card:#fff;--tx:#1d1d4f;--mu:#666a8a;--ac:#00aeef;--bd:#d8dcec;--ok:#1e9e5a;--er:#d6364a}
-body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,sans-serif;line-height:1.45}
-main{max-width:800px;margin:0 auto;padding:16px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px;margin-bottom:16px}
-h1,h2{color:var(--ac);margin-top:0}
-button{font:inherit;cursor:pointer;background:var(--ac);color:#fff;border:0;border-radius:8px;padding:10px 16px;font-weight:700;display:inline-block;text-align:center;width:100%;margin-top:8px}
-button.danger{background:var(--er)}
-button.ok-btn{background:var(--ok)}
-button.pdf-btn{background:#e74c3c; width:auto;}
-input, textarea{font:inherit;width:100%;padding:10px;border:1px solid var(--bd);border-radius:8px;box-sizing:border-box;margin-bottom:10px}
-.row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
-.item{border-bottom:1px solid var(--bd);padding:12px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.item:last-child{border-bottom:0}
-
-@media print {
-  body { background: #fff; color: #000; }
-  button, .row, .card:not(#card-relatorio) { display: none !important; }
-  .card { border: none; padding: 0; box-shadow: none; }
-}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f5f7fb;--card:#fff;--tx:#1d1d4f;--mu:#666a8a;--ac:#00aeef;--bd:#d8dcec;--ok:#1e9e5a;--er:#d6364a}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10122a;--card:#1a1d3d;--tx:#eef0ff;--mu:#a3a8cc;--bd:#33376a}}
+:root[data-theme="dark"]{--bg:#10122a;--card:#1a1d3d;--tx:#eef0ff;--mu:#a3a8cc;--bd:#33376a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.45}
+main{max-width:640px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px}
+h1{font-size:1.5rem;margin:0 0 8px;color:var(--ac)}
+p{color:var(--mu)}
+button{font:inherit;cursor:pointer}
+input{font:inherit;width:100%;padding:12px;border:2px solid var(--bd);border-radius:12px;background:transparent;color:var(--tx)}
+.sm{display:inline-block;width:auto;padding:6px 12px;margin:6px 6px 0 0;font-size:.9rem}
+.go{background:var(--ac);color:#fff;border:0;border-radius:12px;padding:14px 22px;font-weight:700;width:100%;margin-top:12px}
+.go:disabled{opacity:.4;cursor:not-allowed}
+.opt{display:block;width:100%;text-align:left;background:transparent;color:var(--tx);border:2px solid var(--bd);border-radius:12px;padding:12px 14px;margin:8px 0}
+.opt.sel{border-color:var(--ac);background:rgba(0,174,239,.12)}
+.bar{height:8px;background:var(--bd);border-radius:8px;overflow:hidden;margin:6px 0 16px}
+.bar i{display:block;height:100%;background:var(--ac)}
+.q{font-size:1.1rem;font-weight:600;margin:0 0 8px}
+.big{font-size:3rem;font-weight:800;margin:4px 0}
+.ok{color:var(--ok)}.er{color:var(--er)}
+.rev{border-top:1px solid var(--bd);padding:10px 0;font-size:.92rem}
+.hide{display:none}
 </style>
-</head>
-<body>
-<main>
-  <!-- SECÇÃO DE ALUNOS E RELATÓRIO -->
-  <div class="card" id="card-relatorio">
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-      <div>
-        <h1>Painel do Instrutor</h1>
-        <p>Aprove ou recuse o acesso dos alunos e consulte os resultados.</p>
-      </div>
-      <button class="pdf-btn" onclick="exportarPDF()">🖨️ Exportar Relatório (PDF)</button>
-    </div>
-    
-    <div id="lista-alunos" style="margin-top:20px;">A carregar alunos…</div>
-  </div>
-
-  <!-- SECÇÃO DE ADICIONAR QUESTÕES NO FIREBASE -->
-  <div class="card">
-    <h2>Cadastrar Nova Questão</h2>
-    <p>Adicione uma nova questão ao Firebase. No futuro, pode consultá-las aqui para passar para o código fixo.</p>
-    
-    <label><b>Enunciado da Pergunta:</b></label>
-    <textarea id="nova-pergunta" rows="2" placeholder="Ex: Qual é a norma de..."></textarea>
-
-    <label><b>Resposta Correta:</b></label>
-    <input type="text" id="nova-correta" placeholder="Ex: Resposta Certa">
-
-    <label><b>Alternativa Incorreta 1:</b></label>
-    <input type="text" id="inc-1" placeholder="Errada 1">
-
-    <label><b>Alternativa Incorreta 2:</b></label>
-    <input type="text" id="inc-2" placeholder="Errada 2">
-
-    <label><b>Alternativa Incorreta 3:</b></label>
-    <input type="text" id="inc-3" placeholder="Errada 3">
-
-    <label><b>Alternativa Incorreta 4:</b></label>
-    <input type="text" id="inc-4" placeholder="Errada 4">
-
-    <button class="ok-btn" onclick="salvarQuestao()">Guardar Questão no Firebase</button>
-  </div>
-
-  <!-- LISTA DE QUESTÕES CADASTRADAS NO FIREBASE -->
-  <div class="card">
-    <h2>Questões Personalizadas no Firebase</h2>
-    <div id="lista-questoes-fb">A carregar questões do Firebase...</div>
-  </div>
-</main>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-<script>
-// --- PROTEÇÃO DE SENHA DO INSTRUTOR ---
-const senhaInformada = prompt("Painel Restrito. Digite a senha do instrutor:");
-if (senhaInformada !== "102030") {
-  alert("Senha incorreta ou acesso negado.");
-  window.location.href = "index.html";
-}
-
-const CFG = {apiKey:"AIzaSyCIvffrClPs-qR-WqVNirr8-n7LqsjGtio",authDomain:"prova-de-instrucao.firebaseapp.com",databaseURL:"https://prova-de-instrucao-default-rtdb.firebaseio.com",projectId:"prova-de-instrucao",appId:"1:720424141498:web:ac9557168acf5a37a2f883"};
-firebase.initializeApp(CFG);
-const DB = firebase.database();
-
-// --- GESTÃO DE ALUNOS ---
-DB.ref("alunos").on("value", snapshot => {
-  const dados = snapshot.val();
-  const container = document.getElementById("lista-alunos");
-  container.innerHTML = "";
-  
-  if (!dados) {
-    container.textContent = "Nenhum aluno registado ainda.";
-    return;
-  }
-
-  Object.keys(dados).forEach(id => {
-    const a = dados[id];
-    const div = document.createElement("div");
-    div.className = "item";
-    
-    let infoExtra = `Status: <b>${a.status}</b>`;
-    if(a.status === "concluido") {
-      infoExtra += ` | Acertos: <b>${a.acertos}/${a.total}</b> (${a.percentual}%)`;
-    }
-
-    div.innerHTML = `
-      <div>
-        <b>${a.nome}</b><br>
-        <small>${infoExtra}</small>
-      </div>
-      <div>
-        ${a.status !== 'aprovado' ? `<button class="ok-btn" onclick="setStatus('${id}', 'aprovado')" style="width:auto;margin:0">Aprovar</button>` : ''}
-        ${a.status !== 'negado' ? `<button class="danger" onclick="setStatus('${id}', 'negado')" style="width:auto;margin:0">Negar</button>` : ''}
-        <button class="danger" onclick="removerAluno('${id}')" style="background:#555;width:auto;margin:0">Excluir</button>
-      </div>
-    `;
-    container.appendChild(div);
-  });
-});
-
-function setStatus(id, st) { DB.ref("alunos/" + id + "/status").set(st); }
-function removerAluno(id) { if(confirm("Deseja remover este registo de aluno?")) DB.ref("alunos/" + id).remove(); }
-function exportarPDF() { window.print(); }
-
-// --- GESTÃO DE QUESTÕES NO FIREBASE ---
-function salvarQuestao() {
-  const texto = document.getElementById("nova-pergunta").value.trim();
-  const correta = document.getElementById("nova-correta").value.trim();
-  const inc1 = document.getElementById("inc-1").value.trim();
-  const inc2 = document.getElementById("inc-2").value.trim();
-  const inc3 = document.getElementById("inc-3").value.trim();
-  const inc4 = document.getElementById("inc-4").value.trim();
-
-  if (!texto || !correta || !inc1 || !inc2 || !inc3 || !inc4) {
-    alert("Por favor, preencha o enunciado, a resposta correta e as 4 alternativas incorretas.");
-    return;
-  }
-
-  DB.ref("questoes").push({
-    texto: texto,
-    correta: correta,
-    incorretas: [inc1, inc2, inc3, inc4]
-  }).then(() => {
-    alert("Questão salva com sucesso no Firebase!");
-    // Limpa os campos
-    document.getElementById("nova-pergunta").value = "";
-    document.getElementById("nova-correta").value = "";
-    document.getElementById("inc-1").value = "";
-    document.getElementById("inc-2").value = "";
-    document.getElementById("inc-3").value = "";
-    document.getElementById("inc-4").value = "";
-  }).catch(err => {
-    alert("Erro ao salvar questão: " + err.message);
-  });
-}
-
-// Ouve e lista as questões guardadas no Firebase
-DB.ref("questoes").on("value", snapshot => {
-  const dados = snapshot.val();
-  const container = document.getElementById("lista-questoes-fb");
-  container.innerHTML = "";
-
-  if (!dados) {
-    container.textContent = "Nenhuma questão personalizada guardada no Firebase.";
-    return;
-  }
-
-  Object.keys(dados).forEach(id => {
-    const q = dados[id];
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = `
-      <div>
-        <b>${q.texto}</b><br>
-        <small style="color:var(--ok)"><b>Correta:</b> ${q.correta}</small><br>
-        <small style="color:var(--mu)"><b>Incorretas:</b> ${q.incorretas ? q.incorretas.join(" | ") : ''}</small>
-      </div>
-      <button class="danger" onclick="removerQuestao('${id}')" style="width:auto;margin:0">Excluir</button>
-    `;
-    container.appendChild(div);
-  });
-});
-
-function removerQuestao(id) {
-  if (confirm("Tem certeza que deseja apagar esta questão do Firebase?")) {
-    DB.ref("questoes/" + id).remove();
-  }
-}
-</script>
-</body>
-</html>
+</head><body><main>
+<div id="lg" class="card"><h1>Área do instrutor</h1><p>Digite a senha para entrar.</p>
+<input id="pw" type="password" placeholder="Senha"><button class="go" id="en">Entrar</button><p id="er" class="er"></p></div>
+<div id="pn" class="card hide"><h1>Painel do instrutor</h1><p id="as"></p><div id="tp"></div><div id="al"></div></div>
+</main><script>
+const CFG={apiKey:"AIzaSyCIvffrClPs-qR-WqVNirr8-n7LqsjGtio",authDomain:"prova-de-instrucao.firebaseapp.com",databaseURL:"https://prova-de-instrucao-default-rtdb.firebaseio.com",projectId:"prova-de-instrucao",appId:"1:720424141498:web:ac9557168acf5a37a2f883"};
+const SENHA="102030";
+const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const f1=x=>x.toFixed(1).replace(".",",");
+let DB=null,D={};
+const dt=x=>new Date(x).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+const att=x=>{const e=Object.values(x.erros||{});return `<details style="margin:6px 0"><summary class="${x.n>=8?"ok":"er"}" style="cursor:pointer"><b>${f1(x.n)}</b> (${x.h}/20) · ${x.n>=8?"Aprovado":"Reprovado"} · ${dt(x.t)}</summary>`+
+(e.length?e.map(y=>`<div style="margin:8px 0 0 12px;font-size:.88rem"><b>${esc(y.q)}</b><br><span class="er">Respondeu: ${esc(y.r)}</span><br><span class="ok">Correta: ${esc(y.c)}</span></div>`).join(""):x.h<20?`<div style="margin:8px 0 0 12px;color:var(--mu)">Sem detalhes desta tentativa.</div>`:`<div class="ok" style="margin:8px 0 0 12px">Gabaritou, nenhum erro.</div>`)+`</details>`};
+function rend(){const ids=Object.keys(D).sort((a,b)=>D[a].ts-D[b].ts);
+ const T=i=>Object.values(D[i].tentativas||{}),fez=ids.filter(i=>T(i).length),ap=fez.filter(i=>T(i).some(x=>x.n>=8));
+ $("as").textContent=`${ids.length} aluno(s) · ${ids.filter(i=>D[i].status==="aprovado").length} liberado(s) · ${fez.length} fizeram a prova · ${ap.length} aprovado(s)`;
+ const M={};ids.forEach(i=>T(i).forEach(a=>Object.values(a.erros||{}).forEach(y=>M[y.q]=(M[y.q]||0)+1)));
+ const tp=Object.entries(M).sort((a,b)=>b[1]-a[1]).slice(0,5);
+ $("tp").innerHTML=tp.length?`<details class="rev" open><summary><b>Questões mais erradas da turma</b></summary>`+tp.map(([q,c])=>`<div style="margin-top:6px;font-size:.88rem">${c}× · ${esc(q)}</div>`).join("")+`</details>`:"";
+ $("al").innerHTML=ids.length?ids.map(i=>{const r=D[i],t=T(i),st=r.status;
+ return `<div class="rev"><b>${esc(r.nome)}</b> · <i>${st==="aprovado"?"Liberado":st==="negado"?"Negado":"Aguardando"}</i><br>`+
+ (t.length?t.sort((a,b)=>a.t-b.t).map(att).join(""):`<span style="color:var(--mu)">Sem prova feita</span>`)+
+ `<br><button class="opt sm" data-i="${i}" data-s="aprovado">Aprovar entrada</button><button class="opt sm" data-i="${i}" data-s="negado">Negar</button><button class="opt sm" data-i="${i}" data-s="x">Excluir</button></div>`}).join(""):"<p>Nenhum aluno solicitou entrada ainda.</p>"}
+$("en").onclick=()=>{if($("pw").value!==SENHA){$("er").textContent="Senha incorreta.";return}
+ if(CFG.apiKey.startsWith("COLE")){$("er").textContent="Configure o Firebase no arquivo (CFG).";return}
+ try{firebase.initializeApp(CFG);DB=firebase.database()}catch(e){$("er").textContent="Erro ao conectar ao banco.";return}
+ $("lg").classList.add("hide");$("pn").classList.remove("hide");
+ DB.ref("alunos").on("value",q=>{D=q.val()||{};rend()})};
+$("pw").onkeydown=e=>{if(e.key==="Enter")$("en").click()};
+$("al").onclick=e=>{const b=e.target.closest("button[data-i]");if(!b)return;const r=DB.ref("alunos/"+b.dataset.i);
+ if(b.dataset.s==="x"){if(confirm("Excluir este aluno?"))r.remove()}else r.update({status:b.dataset.s})};
+</script></body></html>
