@@ -105,10 +105,6 @@ Para álcool isopropílico é proibido usar:|Garrafa PET|Vasilha com dispensador
 O alicate decapador de acrilato deve ser limpo com:|Pincel, a seco|Álcool isopropílico|Sopro|Água|Pano úmido
 O ajuste da altura da lâmina do clivador é feito com auxílio de:|Máquina de fusão|Power meter|OTDR|Caneta VFL|Lupa
 A caneta VFL do power meter tem:|20 mW|1 mW|5 mW|50 mW|100 mW
-Na 1ª fiscalização irregular de CLT:|Advertência formal + reciclagem|Suspensão|Demissão|Multa|Nada
-Na 1ª fiscalização irregular de parceira:|Multa + reciclagem|Bloqueio permanente|Suspensão de 5 dias|Advertência verbal|Nada
-Na 3ª fiscalização irregular de CLT:|Solicitação de desligamento por justa causa|Advertência|Suspensão de 1 dia|Multa|Reciclagem
-Meta mensal de vistorias das lideranças:|6|2|10|20|1
 Quanto dura a sessão de login do IFS MWO?|10 horas|1 hora|24 horas|5 horas|30 minutos
 No aviso de login expirado, o técnico deve clicar:|"AGORA"|"Atrasado"|No X|Em "Limpar cache"|Em "Forçar sincronização"
 O informe de deslocamento deve ser dado:|Ao iniciar a locomoção até o cliente|Ao chegar no cliente|Ao final do dia|Após a instalação|Antes de sair da base
@@ -149,7 +145,6 @@ Qual o máximo de cabo UTP por equipamento mesh sem cobrança adicional?|20 metr
 Quantos equipamentos tem o kit mesh?|1 controlador + 3 agentes (4 no total)|1 controlador + 1 agente|2 controladores + 2 agentes|5 agentes|1 controlador + 5 agentes
 Ponto ideal para instalar o roteador mesh agente, medido no sinal do principal:|-65 dBm|-30 dBm|-90 dBm|-10 dBm|0 dBm
 Qual a preferência na instalação do mesh?|Por cabo de rede|Por Wi-Fi|Por rádio|Por cabo coaxial|Por fibra
-Ativar mesh via Wi-Fi (sem cabo) é permitido:|Em cenários específicos, com autorização prévia do líder de Ativação e Manutenção|Sempre|Nunca|Se o cliente preferir|Se o técnico estiver com pressa
 Em qual porta os equipamentos mesh devem ser conectados?|WAN dos roteadores|LAN dos roteadores|RJ11|USB|Console
 Sobre marcas no mesh:|Usar equipamentos da mesma marca (exceto ZTE F670L com TP-Link HC220-G5)|Misturar qualquer marca|Só ZTE com ZTE e TP-Link com TP-Link, sem exceção|Qualquer marca com cabo Cat6|Só Mikrotik
 É permitido instalar agentes mesh em outra residência?|Não, apenas em extensões da casa do cliente (edícula, quiosque)|Sim, no vizinho|Sim, se o vizinho pedir|Sim, com Wi-Fi|Sim, no prédio ao lado
@@ -167,37 +162,52 @@ O olhal deve ser instalado:|Nas faces do poste, nunca nos cantos|Nos cantos|Na p
 const Q=RAW.split("\n").map(l=>l.split("|")).filter(a=>a.length==6);
 const $=id=>document.getElementById(id);$("nq").textContent=Q.length+" questões";
 const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-let T,i,sel,hits,log;
+let T,i,sel,hits,log,all;
 function show(id){["gate","start","quiz","res"].forEach(x=>$(x).classList.toggle("hide",x!=id))}
-function start(){T=sh(Q).slice(0,20).map(a=>({q:a[0],c:a[1],o:sh(a.slice(1))}));i=0;hits=0;log=[];show("quiz");draw()}
-function draw(){const t=T[i];sel=null;$("ct").textContent=`Questão ${i+1} de 20`;$("pb").style.width=(i/20*100)+"%";$("qt").textContent=t.q;
-$("ops").innerHTML="";t.o.forEach(o=>{const b=document.createElement("button");b.className="opt";b.textContent=o;b.onclick=()=>{sel=o;[...$("ops").children].forEach(x=>x.classList.toggle("sel",x===b));$("nx").disabled=false};$("ops").appendChild(b)});
-$("nx").disabled=true;$("nx").textContent=i==19?"Finalizar prova":"Próxima"}
-function next(){const t=T[i];if(sel===t.c)hits++;else log.push({q:t.q,r:sel,c:t.c});i++;i<20?draw():end()}
-function end(){const n=(hits/20*10),ok=n>=8;show("res");report(n);
-$("res").innerHTML=`<h1>${ok?"Aprovado! 🎉":"Reprovado"}</h1><div class="big ${ok?"ok":"er"}">${n.toFixed(1).replace(".",",")}</div><p>${hits} de 20 acertos · média mínima 8,0</p>`+
-(log.length?`<h3>Revisão dos erros</h3>`+log.map(e=>`<div class="rev"><b>${e.q}</b><br><span class="er">Sua resposta: ${e.r}</span><br><span class="ok">Correta: ${e.c}</span></div>`).join(""):`<p class="ok">Gabaritou! Nenhum erro.</p>`)+
-`<button class="go" onclick="start()">Fazer nova prova (20 novas sorteadas)</button>`}
-$("bs").onclick=start;$("nx").onclick=next;
-
 const CFG={apiKey:"AIzaSyCIvffrClPs-qR-WqVNirr8-n7LqsjGtio",authDomain:"prova-de-instrucao.firebaseapp.com",databaseURL:"https://prova-de-instrucao-default-rtdb.firebaseio.com",projectId:"prova-de-instrucao",appId:"1:720424141498:web:ac9557168acf5a37a2f883"};
-let DB=null,ID=null,R0=null;
+let N=20,DB=null,ID=null,R0=null,run=false,ref=null;
 try{ID=localStorage.getItem("alunoId")}catch(e){}
-const ok=!CFG.apiKey.startsWith("COLE");
+const okc=!CFG.apiKey.startsWith("COLE");
+const byQ=Object.fromEntries(Q.map(a=>[a[0],a]));
+const f1=x=>x.toFixed(1).replace(".",",");
 function gmsg(t,form){$("gm").textContent=t;$("gf").classList.toggle("hide",!form)}
-function report(n){if(DB&&R0)DB.ref("alunos/"+ID+"/tentativas").push({n,h:hits,t:Date.now(),erros:log.map(e=>({q:e.q,r:e.r||"",c:e.c}))}).catch(()=>{})}
-function gupd(){if(!$("quiz").classList.contains("hide")||!$("res").classList.contains("hide"))return;
+function mk(qs){return qs.filter(q=>byQ[q]).map(q=>{const a=byQ[q];return{q:a[0],c:a[1],o:sh(a.slice(1))}})}
+function pick(prev){const seen=new Set(prev.map(x=>x.q)),bad=new Set(prev.filter(x=>x.r!==x.c).map(x=>x.q));
+ const fresh=sh(Q.filter(a=>!seen.has(a[0])));if(fresh.length>=20)return fresh.slice(0,20).map(a=>a[0]);
+ const old=sh(Q.filter(a=>seen.has(a[0]))).sort((a,b)=>(bad.has(b[0])?1:0)-(bad.has(a[0])?1:0));
+ return fresh.concat(old).slice(0,20).map(a=>a[0])}
+function draw(){const t=T[i];sel=null;$("ct").textContent=`Questão ${i+1} de ${N}`;$("pb").style.width=(i/N*100)+"%";$("qt").textContent=t.q;$("ops").innerHTML="";
+ t.o.forEach(o=>{const b=document.createElement("button");b.className="opt";b.textContent=o;b.onclick=()=>{sel=o;[...$("ops").children].forEach(x=>x.classList.toggle("sel",x===b));$("nx").disabled=false};$("ops").appendChild(b)});
+ $("nx").disabled=true;$("nx").textContent=i==N-1?"Finalizar prova":"Próxima"}
+function next(){const t=T[i];all.push({q:t.q,r:sel,c:t.c});if(sel===t.c)hits++;
+ if(DB)DB.ref("alunos/"+ID+"/atual/ans/"+i).set(sel).catch(()=>{});
+ i++;i<N?draw():end()}
+function begin(){N=T.length;run=true;show("quiz");i>=N?end():draw()}
+function startLocal(){T=mk(sh(Q).slice(0,20).map(a=>a[0]));i=0;hits=0;all=[];begin()}
+function launch(){run=true;const at=R0.atual;let qs,ans=[];
+ if(at&&at.rodada===R0.rodada){qs=Object.values(at.qs);ans=Object.values(at.ans||{})}
+ else{qs=pick(Object.values(R0.tentativas||{}).flatMap(t=>Object.values(t.resp||t.erros||{})));DB.ref("alunos/"+ID+"/atual").set({rodada:R0.rodada,qs})}
+ T=mk(qs);i=0;hits=0;all=[];
+ ans.forEach((r,k)=>{if(T[k]){all.push({q:T[k].q,r,c:T[k].c});if(r===T[k].c)hits++;i++}});
+ begin()}
+function end(){const n=hits/N*10;
+ if(!DB){show("res");$("res").innerHTML=`<h1>Treino concluído</h1><div class="big">${f1(n)}</div><p>${hits} de ${N} acertos</p><button class="go" onclick="startLocal()">Treinar de novo</button>`;return}
+ show("gate");gmsg("Enviando suas respostas…",false);$("gt").classList.add("hide");
+ const k=DB.ref("alunos/"+ID+"/tentativas").push().key,u={};
+ u["tentativas/"+k]={n,h:hits,t:Date.now(),rodada:R0.rodada||1,resp:all.map(e=>({q:e.q,r:e.r||"",c:e.c}))};u.status="enviada";u.atual=null;
+ DB.ref("alunos/"+ID).update(u).then(()=>{run=false;gupd()}).catch(()=>{gmsg("Falha ao enviar. Verifique a internet e tente de novo.",false);$("gt").textContent="Tentar enviar de novo";$("gt").classList.remove("hide");$("gt").onclick=end})}
+function gupd(){if(run)return;const s=R0&&R0.status;
  if(!R0){show("gate");gmsg("Informe seu nome para solicitar entrada na prova.",true)}
- else if(R0.status==="aprovado")show("start");
- else{show("gate");gmsg(R0.status==="negado"?"Sua entrada foi negada pelo instrutor. Fale com ele.":"Olá, "+R0.nome+"! Aguardando o instrutor aprovar sua entrada…",false)}}
-function watch(){DB.ref("alunos/"+ID).on("value",s=>{R0=s.val();gupd()})}
+ else if(s==="liberada")launch();
+ else{show("gate");gmsg(s==="negado"?"Sua entrada foi negada pelo instrutor. Fale com ele.":s==="enviada"?"Prova enviada! Aguarde o instrutor.":s==="encerrado"?"Cadastro concluído. Obrigado, "+R0.nome+"!":"Olá, "+R0.nome+"! Aguardando o instrutor aprovar sua entrada…",false)}}
+function watch(){if(ref)ref.off();ref=DB.ref("alunos/"+ID);ref.on("value",s=>{R0=s.val();gupd()})}
 function init(){
- if(!ok){gmsg("Firebase não configurado. Você pode treinar sem registro.",false);$("gt").classList.remove("hide");return}
+ if(!okc){gmsg("Firebase não configurado. Você pode treinar sem registro.",false);$("gt").classList.remove("hide");return}
  try{firebase.initializeApp(CFG);DB=firebase.database()}catch(e){gmsg("Erro ao conectar ao banco de dados.",false);$("gt").classList.remove("hide");return}
  if(ID)watch();else gupd()}
 $("gj").onclick=()=>{const n=$("nm").value.trim();if(n.length<3||!DB)return;
  ID=DB.ref("alunos").push().key;try{localStorage.setItem("alunoId",ID)}catch(e){}
  DB.ref("alunos/"+ID).set({nome:n,status:"pendente",ts:Date.now()}).then(watch).catch(()=>gmsg("Não foi possível enviar. Tente de novo.",true))};
-$("gt").onclick=()=>show("start");
+$("gt").onclick=startLocal;$("nx").onclick=next;
 init();
 </script></body></html>
