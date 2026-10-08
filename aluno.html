@@ -43,122 +43,66 @@ input{font:inherit;width:100%;padding:12px;border:2px solid var(--bd);border-rad
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
-const RAW=`Quantos cabos flat cada ranhura da roldana nova comporta?|2|1|3|4|8
-Quantos clientes cada roldana nova de flats acomoda?|Até 16|Até 8|Até 12|Até 4|Até 20
-Em mudança de direção em 90º com flats, o que é obrigatório?|Duas alças|Uma alça|Spiral Tube|Suporte dielétrico|Roldana extra
-A roldana antiga suporta até:|8 cabos|4 cabos|16 cabos|12 cabos|2 cabos
-O suporte dielétrico é usado para:|Sustentar cabos AS que passam pelo poste|Ancorar drop|Fazer reserva técnica|Fixar caixa de emenda|Fixar plaqueta
-Quando NÃO usar suporte dielétrico?|Quando há ângulo no cabo|Em trecho reto|Em cabo primário|Em cabo de 06FO|Em poste de concreto
-Na passagem por dielétrico, o spiral tube vai:|~10 cm no lado oposto ao sinal|No lado do sinal|30 cm nos dois lados|Em toda a extensão|Não se usa
-A "volta em falso" no dielétrico serve para:|Evitar que o spiral corra para o meio do vão|Estética|Reserva técnica|Aterramento|Medir sinal
-Spiral tube padrão para acabamento de cabos AS:|Amarelo de ½|Azul de ¼|Preto de 1"|Vermelho de ⅜|Branco de 2"
-Spiral tube usado no drop flat:|½ ou ⅜|1"|¼|2"|Nenhum
-A plaqueta de identificação deve ficar com o nome:|Virado para baixo|Virado para cima|Para o poste|Para a rua|Indiferente
-A plaqueta deve ser orientada para:|O lado do sinal|O lado oposto ao sinal|A rua|O transformador|Qualquer lado
-Quantas plaquetas por BAP?|Apenas uma|Duas|Três|Quatro|Nenhuma
-A plaqueta é presa com:|Arame de espina|Fita adesiva|Parafuso|Cola|Velcro
-Em ancoragem com alça, o spiral tube deve cobrir:|Toda a lupa e as alças, um por cabo|Somente a lupa|Somente as alças|Somente a ponta|Nada
-O suporte de ancoragem Mini PT é fixado com:|Cinta + fecho de aço inox|Parafuso J|Prego|Cola|Arame de espina
-Onde NÃO instalar o Mini PT?|Na quina do poste padrão|Na face do poste|Na parede|Com cinta inox|Com plaqueta
-O pimentão serve para:|Receber o drop do poste padrão em entrada aérea|Ancorar cabo AS|Ancorar cordoalha|Fazer reserva|Fixar CA
-Reserva técnica interna na casa do cliente só pode ficar:|No forro ou caixa de passagem (5 a 10 m)|Nos cômodos|No telhado|Na parede|Na garagem
-Escolta cruzeta para reserva técnica (RT):|Uma BAP em posição "X"|Duas BAPs em "+"|Três BAPs|Sem BAP|Uma BAP em "T"
-Escolta cruzeta para caixa de emenda (CE):|Duas BAPs em "+"|Uma BAP em "X"|Três BAPs|Nenhuma BAP|Uma BAP em "T"
-Quantas escoltas no mesmo poste?|Não mais que uma|Duas|Três|Ilimitado|Quatro
-Em relação aos cabos de BT, o cabo da Unifique:|Nunca passa entre ou acima|Pode passar acima|Pode passar entre|Passa junto|Passa por cima do transformador
-Em relação à luminária, o cabo deve ser instalado:|Abaixo da luminária|Acima|Cortando seus fios|Entre ela e a BT|Sobre o fotossensor
-Perto de transformadores, havendo rede Unifique:|Seguir no mesmo sentido|Seguir no sentido oposto|Escolher qualquer sentido|Passar por cima|Cancelar o serviço
-Espinação com guia exige no mínimo quantas pessoas?|3|2|1|4|5
-Em qual frequência se mede o sinal no GPON?|1490 nm|1310 nm|1550 nm|1577 nm|850 nm
-Perda média na frequência de 1490 nm:|0,23 dB/km|0,35 dB/km|0,5 dB/km|1,0 dB/km|0,1 dB/km
-O retorno da ONU trabalha em:|1310 nm, com 0,35 dB/km|1490 nm, com 0,23 dB/km|1550 nm|1577 nm|850 nm
-Em qual frequência se mede o XGSPON?|1577 nm|1490 nm|1310 nm|1550 nm|1625 nm
-Faixa de potência para ativar ONU XGSPON:|-20 a -10 dBm|-30 a -25 dBm|-5 a 0 dBm|-40 a -35 dBm|0 a +5 dBm
-Diferença aceitável entre sinal da CA e do cliente:|Até 1,5 dBm abaixo ou 0,5 dBm acima|Até 3 dBm abaixo|Exatamente igual|Até 5 dBm acima|Qualquer valor
-A aferição na CA deve ser feita com:|Cordão óptico APC/UPC|Fibra nua|Pigtail do splitter|Qualquer cabo|Conector de campo
-Nunca se deve retirar:|O pigtail do splitter|O cordão óptico|A tampa|A anilha|A escolta
-Se o sinal divergir entre CA e cliente, verifique:|O cordão de aferição e a regulagem do power meter|Só trocar a ONU|Só trocar a CA|Ignorar|Cancelar a OS
-Atrás da CA, o drop flat dá quantas voltas na escolta?|Duas|Uma|Três|Quatro|Nenhuma
-Acabamento do drop flat próximo à entrada da CA:|Spiral ⅜ individual|Spiral ½ coletivo|Spiral 1"|Fita isolante|Nenhum
-Dentro da CA, a alma de aço do flat:|Entra por dentro da borracha de vedação com uma pequena dobra|É cortada|Fica solta|Vai ao splitter|É removida
-Casa sem número, a anilha deve identificar como:|SN|0|X|NA|ND
-Porta designada do splitter indisponível:|Fazer batimento da caixa com o bot|Usar outra porta|Usar outra caixa|Cancelar|Ligar ao cliente
-Qual o ângulo do polimento APC?|8°|0°|15°|30°|45°
-Capacidade de limpeza da caneta de conectores:|800/900 cliques|100 cliques|200 cliques|50 cliques|2000 cliques
-Em manutenção, a limpeza do conector deve ser feita:|Logo após desconectar e antes de reconectar|Só no fim do dia|Nunca|Semanalmente|Mensalmente
-O padrão do RJ45 no mesh é:|T568-A|T568-C|T100|Cat 7|RJ11
-O cinto paraquedista tipo "H" tem quantos pontos de ancoragem?|4|2|3|6|1
-O trava-quedas é preso nos pontos:|Frontais superiores|Laterais|Dorsais|Da cintura|Das pernas
-O capacete classe "E" protege contra choques de até:|20.000 V|1.000 V|500 V|5.000 V|127 V
-As luvas de baixa tensão aguentam:|500 V a 1000 V|10 V|50 V|20.000 V|220 mil V
-As luvas de vaqueta curta:|Não são isolantes nem usadas com as de BT|São isolantes|São usadas sobre as de BT|Substituem as de BT|Aguentam 1000 V
-O trava-quedas é usado em atividades acima de:|2 metros|0,5 metro|1 metro|5 metros|10 metros
-A corda da linha de vida tem:|12 mm e 20 metros|8 mm e 5 m|12 mm e 2 m|20 mm e 12 m|6 mm e 50 m
-A corda de amarração de topo de escada tem:|12 mm e 2 metros|12 mm e 20 m|8 mm e 5 m|20 mm e 2 m|6 mm e 1 m
-O mosquetão oval tem travamento tipo:|Rosca|Mola simples|Pino|Gatilho|Sem trava
-Quantos cones por escada?|5|2|3|8|10
-A fita Eureka de ancoragem suporta cargas de trabalho de até:|100 kg|20 kg|50 kg|300 kg|500 kg
-Escada de fibra deve ter no mínimo:|6,00 m|3 m|4 m|8 m|10 m
-Na escada de fibra, o técnico não pode passar do:|Antepenúltimo degrau|Último degrau|Penúltimo degrau|Primeiro degrau|Segundo degrau
-A escada extensiva de alumínio:|Não pode ser usada em postes|É a padrão para postes|Serve para BT|Substitui a de fibra|Serve para cordoalha
-Para álcool isopropílico é proibido usar:|Garrafa PET|Vasilha com dispensador|Frasco de pressão|Frasco homologado|Vasilha da empresa
-O alicate decapador de acrilato deve ser limpo com:|Pincel, a seco|Álcool isopropílico|Sopro|Água|Pano úmido
-O ajuste da altura da lâmina do clivador é feito com auxílio de:|Máquina de fusão|Power meter|OTDR|Caneta VFL|Lupa
-A caneta VFL do power meter tem:|20 mW|1 mW|5 mW|50 mW|100 mW
-Quanto dura a sessão de login do IFS MWO?|10 horas|1 hora|24 horas|5 horas|30 minutos
-No aviso de login expirado, o técnico deve clicar:|"AGORA"|"Atrasado"|No X|Em "Limpar cache"|Em "Forçar sincronização"
-O informe de deslocamento deve ser dado:|Ao iniciar a locomoção até o cliente|Ao chegar no cliente|Ao final do dia|Após a instalação|Antes de sair da base
-Na foto do auxiliar, o correto é:|Segurar crachá ou documento|Segurar o QR Code|Foto da fachada|Sem auxiliar|Foto de outro celular
-Se só houver menores no local:|Não atender; proceder como ausência e deixar o "Estivemos aqui"|Entrar e atender|Atender no quintal|Pedir o documento ao menor|Fotografar a fachada
-Para avisar que não comparecerá a visita da manhã, o limite é:|10h30|8h|12h|9h|11h30
-Metragem excedente refere-se a cabos acima de:|300 metros|100 m|150 m|500 m|1 km
-O chat "Ativação Fibra Unifique Bot" deve ser usado para:|Apenas novos acessos|Transferência de endereço|Mesh|Telefonia|TV
-Em erro do bot de ativação, o técnico deve:|Tirar print e acionar o SUPUNFTEC2|Cancelar a OS|Ativar manualmente|Usar outra caixa|Esperar o dia seguinte
-A meta de CSAT de atendimento é:|90%|50%|70%|100%|80%
-Qual ação é proibida no IFS MWO sem justificativa?|Limpar dados ou cache|Consultar a agenda|Ver o endereço|Fazer login|Abrir o mapa
-Na visita, sobre a fachada do imóvel:|Não registrar foto da fachada|Sempre fotografar|Fotografar só o número|Enviar ao cliente|Postar no grupo
-Sobre o serviço de IPTV do cliente, o técnico:|Nunca o trata como pirata|Pode chamá-lo de pirata|Bloqueia o serviço|Limita a banda|Recusa o atendimento
-Como o técnico deve se apresentar ao ser atendido pelo cliente?|Cumprimentar, dizer nome, que é da Unifique e que tem visita agendada em nome do cliente|Entrar direto e começar o serviço|Pedir o documento antes de falar|Apenas mostrar o crachá|Perguntar se o cliente já pagou a fatura
-Ninguém atende no local. Qual o procedimento?|Campainha ou palmas, tentar contato, acionar o bot e deixar o Comunicado de Visita|Entrar pelo portão e esperar|Fotografar a fachada e ir embora|Cancelar a OS sem avisar|Ligar para outro cliente
-Quem atende é um menor de idade. O correto é:|Explicar que não pode entrar, deixar o "Estivemos aqui!" e avisar a Unidade|Fazer o serviço normalmente|Pedir que chame um vizinho|Entrar só no quintal|Fotografar o menor
-Se quem atende NÃO é o titular, o técnico deve:|Perguntar nome e grau de parentesco e registrar o documento na OS|Recusar o atendimento|Ignorar o documento|Pedir o CPF do titular por telefone|Cobrar uma taxa
-Se a pessoa não disponibilizar o documento:|O serviço é feito e a informação anotada na OS|O serviço é cancelado|O técnico exige à força|O cliente é multado|A visita é pendenciada
-A proteção de calçado é obrigatória em:|Todas as visitas, instalação ou manutenção|Só na instalação|Só na manutenção|Só em casa com carpete|Só quando o cliente pedir
-Em visitas de manutenção, o técnico deve perguntar:|Em qual cômodo o equipamento está instalado|Quanto o cliente paga de internet|Se o cliente tem Netflix|Qual a idade do cliente|Se há animais na casa
-Ao tirar foto do equipamento:|Não deve aparecer mais nada na imagem|Deve aparecer o cliente|Deve aparecer a fachada|Pode ser foto de outro celular|Deve aparecer o endereço
-No teste de velocidade, o técnico pode:|Usar o dispositivo do cliente, desde que ele permita|Usar sempre o próprio celular pessoal|Dispensar o teste|Testar sem avisar o cliente|Usar o computador do vizinho
-Ao finalizar o atendimento, o técnico deve:|Deixar o local limpo, recolher seus materiais e perguntar se pode ajudar em algo mais|Sair rapidamente sem falar|Deixar sobras de cabo no local|Pedir avaliação 5 ao cliente|Cobrar gorjeta
-Qual pilar da cultura Unifique diz "Nosso sucesso é o sucesso dos nossos clientes"?|Centralidade no cliente|Alta performance|Senso de dono e atitude inovadora|Colaboração|Economia de custos
-Sobre o tratamento ao cliente, o treinamento orienta:|Não tratá-lo como número ou ordem de serviço|Tratá-lo pelo número da OS|Evitar explicar detalhes|Responder só o que perguntarem|Usar termos técnicos sempre
-Para transmitir segurança ao cliente, o técnico deve:|Ser claro e transparente e explicar quantas vezes for preciso|Evitar perguntas|Falar rápido|Deixar dúvidas para depois|Dizer que não é com ele
-Cliente "sem conexão": o que perguntar primeiro?|Se notou quando ficou sem conexão (queda de energia, situação na rua)|Qual o plano de TV|Se já trocou de provedor|Quanto tempo de contrato falta|Se tem seguro
-Toda verificação interna na casa do cliente exige:|Acompanhamento do cliente|Autorização do vizinho|Foto da fachada|Uso de luvas de BT|Assinatura do líder
-Em quedas de conexão, uma das primeiras perguntas é:|O problema ocorre por cabo ou por Wi-Fi?|Qual a cor do roteador?|Quantos anos tem a casa?|Quem instalou a fibra?|Quanto o cliente paga?
-Cliente com IPTV de terceiros reclama de lentidão. O técnico deve:|Informar que a Unifique não limita nem bloqueia e que a instabilidade pode estar na hospedagem do serviço|Dizer que o serviço é pirata|Bloquear o serviço|Cancelar a visita|Trocar a ONU sem testar
-Se não consegue resolver por falta de equipamento ou alcance, o técnico:|Avisa a unidade pedindo auxílio ou nova visita|Deixa o cliente sem retorno|Pega equipamento de outro cliente|Fecha a OS como resolvida|Cobra visita extra
-Ao trocar o equipamento, o técnico deve explicar ao cliente:|As diferenças de frequência do sinal|O preço do equipamento|A marca do vizinho|Nada, pois é indiferente|Como abrir o equipamento
-Em ausência do cliente, a foto no app deve ser:|Apenas do cartão "Estivemos aqui"|Da fachada|Do número da casa|Da rua|Do poste
-Quem indica o ponto de perfuração na parede:|Assume a responsabilidade por danos a elementos não visíveis|Nunca tem responsabilidade|É sempre o técnico|É sempre a Unifique|É o supervisor
-No fechamento, marcar "Problema resolvido: SIM" só se:|A solicitação foi totalmente atendida|O técnico terminou o horário|O cliente estava satisfeito|Houve troca de equipamento|Passou mais de 1 hora
-Quais ordens de serviço são pagas?|Apenas as executadas|Também clientes ausentes|Também pendenciadas|Todas agendadas|Só as de manutenção
-Qual o máximo de cabo UTP por equipamento mesh sem cobrança adicional?|20 metros|5 metros|10 metros|50 metros|100 metros
-Quantos equipamentos tem o kit mesh?|1 controlador + 3 agentes (4 no total)|1 controlador + 1 agente|2 controladores + 2 agentes|5 agentes|1 controlador + 5 agentes
-Ponto ideal para instalar o roteador mesh agente, medido no sinal do principal:|-65 dBm|-30 dBm|-90 dBm|-10 dBm|0 dBm
-Qual a preferência na instalação do mesh?|Por cabo de rede|Por Wi-Fi|Por rádio|Por cabo coaxial|Por fibra
-Em qual porta os equipamentos mesh devem ser conectados?|WAN dos roteadores|LAN dos roteadores|RJ11|USB|Console
-Sobre marcas no mesh:|Usar equipamentos da mesma marca (exceto ZTE F670L com TP-Link HC220-G5)|Misturar qualquer marca|Só ZTE com ZTE e TP-Link com TP-Link, sem exceção|Qualquer marca com cabo Cat6|Só Mikrotik
-É permitido instalar agentes mesh em outra residência?|Não, apenas em extensões da casa do cliente (edícula, quiosque)|Sim, no vizinho|Sim, se o vizinho pedir|Sim, com Wi-Fi|Sim, no prédio ao lado
-Roteador TP-Link com LED branco/verde estático indica:|Configurado e conectado à internet|Falha no equipamento|Atualizando firmware|Conexão perdida|Reiniciando
-Onde posicionar o roteador para melhor sinal?|Local central, elevado e com o mínimo de obstáculos|Atrás da TV|Dentro de armário metálico|No chão do canto|Junto ao micro-ondas
-Apps como Wi-Fi Analyzer e WiFiman servem para:|Medir o sinal e achar o melhor local de instalação|Ativar a ONU|Medir potência óptica|Abrir a OS|Baixar materiais
-A sincronização via WPS do mesh pode levar:|1 a 2 minutos|10 segundos|30 minutos|2 horas|1 dia
-O cabo de sinal pode ser usado em:|Áreas internas, até 50 m (FTTB, mesh, TV, fastpoint)|Câmeras com PoE|Áreas externas|Qualquer distância|Equipamentos com fonte PoE
-Qual ferragem é usada para fixar a roldana de 8 vias?|BAP|Fita de aço sem BAP|Prego|Cola|Arame de espina
-O suporte Mini PT é fixado no poste padrão com:|Cinta + fecho de aço inox|BAP|Parafuso J|Arame|Cola
-Um poste comporta BAP 2. Usar BAP 3 é:|Desperdício de material|Obrigatório|Mais seguro e recomendado|Proibido por norma elétrica|Indiferente
-A BAP é tensionada no poste com:|Parafuso J|Fita inox|Arame|Prego|Cola
-A BAP pode ser instalada por cima de outros elementos do poste?|Não|Sim|Só de outras operadoras|Só em poste de madeira|Só com autorização do cliente
-O olhal deve ser instalado:|Nas faces do poste, nunca nos cantos|Nos cantos|Na ponta do parafuso|Só na rua|Em qualquer lugar`;
+const RAW=`Qual é a meta de CSAT apresentada no material de onboarding técnico?|90%|80%|85%|95%|100%
+Durante o atendimento ao cliente, qual postura o técnico deve adotar em campo?|Atender de forma clara, objetiva e profissional.|Agir de forma rápida sem dar explicações.|Permitir que o cliente realize os testes sozinhos.|Registrar apenas o término da OS.|Focar unicamente na velocidade.
+O que deve ser feito em relação ao problema relatado pelo cliente antes de iniciar?|Confirmar o problema relatado e alinhar o serviço que será realizado.|Ignorar o relato e trocar o cabo óptico.|Pedir para abrir chamado via bot.|Registrar o problema como resolvido.|Fazer teste de velocidade e encerrar.
+O que o técnico deve orientar o cliente ao finalizar o atendimento?|Sobre testes, execução e resultado do atendimento.|Sobre como acessar o IFS MWO.|Sobre as regras da engenharia.|Apenas sobre a troca do roteador.|Que ele não precisa mais de suporte.
+Qual das alternativas está correta sobre o registro do atendimento?|Registrar corretamente as informações e evidências do serviço.|Não é necessário registrar evidências.|Registrar apenas fotos dos equipamentos.|Fazer baixa apenas no final da semana.|O registro no IFS MWO é opcional.
+Como o aplicativo IFS MWO deve ser mantido durante a rotina de trabalho?|Sincronizado durante a rotina de trabalho.|Desconectado para economizar bateria.|Atualizado apenas no final do mês.|Desativado em redes externas.|Configurado em modo offline.
+O que deve ser evitado no aplicativo IFS MWO sem necessidade ou orientação?|O uso de FORCE SYNC.|A sincronização diária.|O fechamento de OS.|O registro de fotos da CA.|A conferência de materiais.
+Quais ações devem ser evitadas para prevenir a perda de dados no IFS MWO?|Evitar ações que possam limpar dados, cache ou sessão sem necessidade.|Sincronizar a cada hora.|Inserir fotos em alta resolução.|Manter o login ativo por 24h.|Utilizar a busca de materiais.
+Em relação ao logout no IFS MWO, qual é a diretriz correta?|Não realizar logout desnecessário durante a execução das atividades.|Realizar logout a cada OS finalizada.|Fazer logout ao trocar de bairro.|Desinstalar o app todo dia.|Fazer logout antes de tirar fotos.
+O que o técnico deve fazer ao final do dia em relação ao sistema IFS MWO?|Conferir a sincronização.|Limpar o cache do celular.|Desinstalar o aplicativo.|Enviar fotos por WhatsApp.|Excluir as ordens concluídas.
+Quando deve ser realizada a APR (Análise Preliminar de Risco)?|Antes do início da atividade.|Após a conclusão do serviço.|Apenas com fiscalização.|No encerramento da OS.|Somente em alta tensão.
+O que deve ser feito ao identificar um risco grave e iminente na execução?|Interromper a atividade e comunicar a liderança.|Continuar com cautela redobrada.|Registrar foto e prosseguir.|Solicitar aprovação do cliente.|Ignorar se o prazo for curto.
+Qual capacete é exigido para atividades que envolvem trabalho em altura?|Capacete classe E com jugular.|Capacete classe A sem jugular.|Capacete classe B com viseira.|Capacete de abas frontais.|Capacete flexível.
+Além de capacete classe E e óculos de segurança, qual vestimenta é exigida?|Vestimenta adequada, incluindo proteção contra chama quando exigida.|Colete refletiva simples.|Uniforme social leve.|Roupa impermeável de borracha.|Proteção térmica.
+O que o técnico deve fazer com os equipamentos de proteção antes da utilização?|Inspecionar os equipamentos antes da utilização.|Guardá-los se houver arranhões.|Utilizar apenas em redes elétricas.|Testar batendo contra o solo.|Substituir a cada três meses.
+Em relação ao cinturão, talabarte e conexões, qual procedimento é correto?|Utilizar os pontos de conexão previstos para o sistema de proteção.|Utilizar pontos improvisados.|Conectar direto na cordoalha sem mosquetão.|Usar equipamentos com danos leves.|Retirar o sistema para facilitar.
+O que deve ser conferido minuciosamente nos componentes de ancoragem?|Mosquetões, trava e integridade dos componentes.|A cor e o fabricante.|O peso suportado pela lona.|Se a corda é impermeável.|O ano de fabricação.
+No registro de engenharia, qual porta deve ser obrigatoriamente informada?|A porta do splitter utilizada.|A porta LAN do roteador.|A porta de entrada da residência.|A porta do armário principal.|A porta lógica DHCP.
+Quais fotos devem ser tiradas quando solicitado nos padrões de atendimento?|Foto do power meter, cordão óptico e porta utilizada.|Foto da fachada e do poste.|Foto do técnico e do veículo.|Foto da tela do cliente.|Foto de foto impressa.
+O que é terminantemente proibido ao tirar fotos para evidências de OS?|Utilizar 'foto de foto' ou fotografar a tela do computador ou equipamento pessoal.|Registrar o power meter ligado.|Anotar o número da CA.|Tirar fotos com luz natural.|Conectar a ONT.
+Quando o técnico deve marcar 'Problema resolvido = SIM' no encerramento da OS?|Somente quando o atendimento estiver efetivamente concluído.|Assim que chegar ao endereço.|Quando o cliente assinar o termo preliminar.|Antes do teste de velocidade.|Quando faltarem materiais.
+O que deve ser feito se o problema não for resolvido durante o atendimento?|Selecionar 'NÃO' e informar o motivo.|Marcar como resolvido e abrir chamado depois.|Fechar o aplicativo sem preencher.|Colocar pendente sem justificativa.|Encerrar pelo bot.
+Como deve ser mantido o estoque sistêmico em relação aos materiais?|Compatível com o material efetivamente utilizado.|Com saldo superior para evitar faltas.|Atualizado apenas no fechamento anual.|Sem vínculo com atividades.|Registrado só em planilhas físicas.
+Qual é a função correta do clivador na fibra óptica?|Realizar corte correto e uniforme da fibra.|Medir a potência óptica GPON.|Limpar conectores e superfícies.|Identificar falhas com laser.|Fundir o núcleo da fibra.
+Para que serve o VFL (Visual Fault Locator) na caixa de ferramentas?|Auxiliar na identificação de continuidade e possíveis falhas.|Medir atenuação em decibéis.|Fazer limpeza química de conectores.|Gravar dados no IFS MWO.|Substituir o power meter.
+De que depende primordialmente a qualidade de uma conexão óptica em campo?|De corte, limpeza, ajuste e montagem corretos.|Da marca do roteador Wi-Fi.|Da quantidade de sobras na fachada.|Do modelo do smartphone.|Da distância da tomada elétrica.
+Qual é o comprimento de onda GPON indicado no material técnico da Unifique?|1490 nm|1310 nm|1330 nm|1550 nm|1577 nm
+Qual é a faixa de ativação GPON apresentada no material técnico?|-26 dBm a -10 dBm|-10 dBm a 0 dBm|-15 dBm a -5 dBm|-35 dBm a -20 dBm|-40 dBm a -30 dBm
+Qual é o comprimento de onda padrão para a tecnologia XGS-PON?|1577 nm|1310 nm|1490 nm|1550 nm|1625 nm
+O que deve ser feito após realizar a medição de potência óptica no cliente?|Comparar com a referência da CA e registrar a medição como evidência.|Descartar se estiver na média da cidade.|Anotar em bloco de papel.|Enviar SMS para o cliente.|Apagar o registro para economizar memória.
+Qual regra deve ser seguida ao instalar a cordoalha na rede externa?|Respeitar o padrão de instalação da cordoalha, realizando ancoragem e tensionamento adequados.|Esticar o cabo ao máximo.|Fixar diretamente em alta tensão.|Utilizar nós manuais.|Evitar plaquetas.
+O que deve ser evitado durante o tensionamento da cordoalha?|Esforço excessivo ou descontrolado.|O uso de equipamentos homologados.|A verificação do vão entre postes.|O acompanhamento da equipe.|O uso de guias de sustentação.
+Como deve ser realizada a espinação dos cabos na rede externa?|De forma uniforme, mantendo o controle do tensionamento.|De forma rápida e sem controle.|Apenas em trechos urbanos.|Passando por dentro de condutores.|Utilizando fitas isolantes comuns.
+Em relação à segurança elétrica na rede externa, o que é proibido?|Não passar cabos entre ou sobre condutores de baixa tensão.|Manter distância segura da rede.|Interromper atividade se houver risco.|Seguir os procedimentos de segurança.|Proteger a infraestrutura existente.
+O que o técnico deve fazer ao se deparar com uma condição insegura na rede externa?|Interromper a atividade e seguir os procedimentos de segurança.|Continuar o trabalho rapidamente.|Isolar com fita comum e terminar sozinho.|Pedir para o cliente desligar a luz.|Registrar foto e ignorar o risco.
+Como deve ser o acabamento final da rede externa antes do encerramento?|Executar espiralamento e fixações conforme o padrão, utilizando plaquetas de identificação.|Com sobra excessiva no poste.|Sem nenhum elemento de identificação.|Deixando cabos encostados em árvores.|Com fixação improvisada.
+Como o cabeamento deve ser organizado na instalação interna?|De forma limpa e segura, evitando dobras excessivas e danos ao cabo.|Solto pelo chão para facilitar.|Passando por dutos de gás e eletricidade.|Preso com pregos na fibra.|Enrolado atrás dos móveis.
+Qual é a regra para a instalação de equipamentos MESH segundo o planejamento?|Priorizar conexão por cabo Ethernet quando aplicável.|Priorizar conexão por Wi-Fi em todos os cômodos.|Instalar sempre na parte externa.|Evitar uso de cabos de rede.|Colocar todos no mesmo cômodo.
+Quando é permitido instalar MESH por Wi-Fi?|Somente nos cenários permitidos, escolhendo o local considerando cobertura e qualidade do sinal.|Em qualquer situação escolhida pelo cliente.|Sempre que faltar cabo.|Apenas em casas com três andares.|Quando a velocidade for menor que 100 Mega.
+Qual é o valor de referência para sinal Wi-Fi superior indicado no material para MESH?|Superior a -65 dBm|Superior a -45 dBm|Superior a -55 dBm|Superior a -75 dBm|Superior a -85 dBm
+Quais aplicativos podem ser utilizados para avaliação do sinal Wi-Fi quando aplicável?|Wi-Fi Analyzer ou WiFiman|Speedtest ou Fast.com|IFS MWO ou Bot Automático|VFL ou Power Meter|WhatsApp ou Telegram
+O que deve ser feito obrigatoriamente no teste final com o cliente?|Confirmar conectividade, realizar teste de velocidade, validar navegação e orientar o cliente.|Apenas entregar o manual impresso.|Pedir para o cliente assinar antes de testar.|Desligar o roteador para reiniciar.|Validar apenas a Smart TV.
+Quais são os canais de atendimento do sistema SUPUNFTEC2 apresentados?|Bot Automático, Atendimento Cliente, Atendimento Redes, Engenharia e Técnico–Qualidade.|WhatsApp, E-mail, Telefone, Chat.|Comercial, Financeiro, Suporte N1, N2 e Diretoria.|Campo, Escritório, Central, Fibra.|Instalação, Manutenção, Retirada, Vendas.|
+Como deve ser feita a conexão física básica entre a ONT e o roteador?|Conectar a porta LAN da ONT à porta WAN do roteador.|Conectar a porta WAN da ONT à porta LAN do roteador.|Conectar via cabo coaxial nos conectores.|Usar cabo USB entre ONT e roteador.|Conectar energia na porta LAN.
+O que deve ser aguardado após a conexão física entre ONT e roteador quando previsto?|A configuração automática.|A reinicialização manual via reset.|A visita do engenheiro de redes.|A aprovação financeira.|O envio do sinal via satélite.
+O que o técnico deve fazer imediatamente após a configuração do roteador?|Realizar os testes de conectividade.|Desligar os equipamentos da tomada.|Entregar a senha de root ao cliente.|Atualizar o sistema do celular do cliente.|Sair do local sem conferir.
+Qual é o primeiro item obrigatório do checklist técnico antes de encerrar a OS?|APR realizada e condições de segurança verificadas.|Pagamento da taxa confirmado.|Devolução de materiais sobressalentes.|Cadastro de e-mail do cliente.|Limpeza física da calçada.
+No checklist técnico de encerramento, o que deve ser conferido sobre os materiais?|Materiais e equipamentos baixados/retirados corretamente.|Se foram guardados no bolso.|Se o cliente quer comprar cabos extras.|A cor dos conectores ópticos.|A nota fiscal do roteador.
+Qual é a conduta correta em relação à limpeza de conectores ópticos em campo?|Usar a caneta de limpeza para manter conectores e superfícies ópticas limpos.|Utilizar álcool comum de limpeza doméstica.|Assoprar os conectores para tirar poeira.|Limpar com flanela sintética sem tratamento.|Dispensar a limpeza se vier lacrado.
+Por que o técnico não deve fazer logout desnecessário no IFS MWO?|Porque pode provocar perda de dados ou inconsistência na rotina de trabalho.|Porque gasta muita bateria do celular.|Porque o sistema bloqueia por 48 horas.|Porque o supervisor recebe alerta.|Porque desinstala o aplicativo.
+O que caracteriza uma evidência de Ordem de Serviço inadequada?|Foto da tela do computador ou equipamento pessoal do cliente ('foto de foto').|Foto clara do power meter ligado.|Registro da porta do splitter correta.|Foto do cordão óptico conectado.|Registro dos testes de velocidade.
+Qual é a conduta correta se o sinal óptico GPON medido estiver fora da faixa (-26 dBm a -10 dBm)?|Comparar com a referência da CA e observar os limites indicados no material para validação.|Ignorar o valor e liberar o atendimento.|Aumentar a potência do laser manualmente.|Trocar apenas o roteador Wi-Fi.|Fechar a OS como resolvido imediatamente.
+Qual é a finalidade principal de utilizar canais de atendimento adequados no SUPUNFTEC2?|Garantir que o suporte seja acionado conforme a necessidade específica do atendimento.|Agilizar conversas informais entre técnicos.|Enviar relatórios de produtividade.|Substituir o IFS MWO.|Realizar chamadas de vídeo com clientes.
+O que deve ser verificado na cordoalha para evitar esforço excessivo durante a instalação?|Evitar esforço excessivo ou descontrolado durante o tensionamento.|A cor do isolamento externo.|Puxar o cabo com auxílio de veículo.|Esticar até o limite de ruptura do aço.|Fixar sem ancoragem nos postes finais.
+Como o técnico deve proceder ao orientar o cliente sobre o funcionamento básico?|Orientar o cliente sobre o funcionamento básico e confirmar que o serviço foi concluído.|Explicar de forma rápida sem se importar se entendeu.|Indicar que o cliente deve ler o manual na internet.|Dizer que o suporte remoto fará tudo.|Não dar explicação para evitar dúvidas.
+Qual EPI é obrigatório para proteção da cabeça em trabalhos em altura?|Capacete classe E com jugular.|Boné com aba reforçada.|Chapéu de proteção solar.|Touca térmica impermeável.|Protetor auricular sem jugular.
+O que deve ser feito ao verificar o resultado de uma instalação MESH?|Validar o resultado após a instalação, testando velocidade e cobertura.|Desligar o equipamento principal da tomada.|Retirar o cabo Ethernet e deixar só Wi-Fi.|Mudar a senha padrão sem avisar.|Encerrar a OS antes de testar a navegação.
+Por que é importante manter o estoque sistêmico compatível com o material utilizado?|Para evitar divergências entre o material físico e o registro no IFS MWO.|Para acumular pontos no ranking.|Para receber ferramentas novas.|Para preencher ordens do dia seguinte.|Para dispensar a conferência.
+O que deve ser verificado no conector após a montagem na conectorização óptica?|Verificar o resultado com os instrumentos adequados e conferir o ajuste/assentamento da fibra.|Se a cor externa combina com a ONT.|Se o conector esquenta na passagem de dados.|Se a perda de sinal está zerada.|Se o conector pode ser reutilizado.
+Qual é a diretriz fundamental ao preencher e encerrar uma Ordem de Serviço?|Conferir os dados antes de finalizar a OS e garantir que todas as evidências exigidas foram registradas.|Fechar a OS no app antes do teste final.|Preencher campos em branco com dados genéricos.|Deixar o encerramento para o dia útil seguinte.|Enviar fotos da galeria pessoal.`;
 const Q=RAW.split("\n").map(l=>l.split("|")).filter(a=>a.length==6);
 const $=id=>document.getElementById(id);$("nq").textContent=Q.length+" questões";
 const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
@@ -199,7 +143,7 @@ function end(){const n=hits/N*10;
 function gupd(){if(run)return;const s=R0&&R0.status;
  if(!R0){show("gate");gmsg("Informe seu nome para solicitar entrada na prova.",true)}
  else if(s==="liberada")launch();
- else{show("gate");gmsg(s==="negado"?"Sua entrada foi negada pelo instrutor. Fale com ele.":s==="enviada"?"Prova enviada! Aguarde o instrutor.":s==="encerrado"?"Cadastro concluído. Obrigado, "+R0.nome+"!":"Olá, "+R0.nome+"! Aguardando o instrutor aprovar sua entrada…",false)}}
+ else{show("gate";gmsg(s==="negado"?"Sua entrada foi negada pelo instrutor. Fale com ele.":s==="enviada"?"Prova enviada! Aguarde o instrutor.":s==="encerrado"?"Cadastro concluído. Obrigado, "+R0.nome+"!":"Olá, "+R0.nome+"! Aguardando o instrutor aprovar sua entrada…",false)}}
 function watch(){if(ref)ref.off();ref=DB.ref("alunos/"+ID);ref.on("value",s=>{R0=s.val();gupd()})}
 function init(){
  if(!okc){gmsg("Firebase não configurado. Você pode treinar sem registro.",false);$("gt").classList.remove("hide");return}
