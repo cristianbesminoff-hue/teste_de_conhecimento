@@ -143,7 +143,7 @@ function end(){const n=hits/N*10;
 function gupd(){if(run)return;const s=R0&&R0.status;
  if(!R0){show("gate");gmsg("Informe seu nome para solicitar entrada na prova.",true)}
  else if(s==="liberada")launch();
- else{show("gate";gmsg(s==="negado"?"Sua entrada foi negada pelo instrutor. Fale com ele.":s==="enviada"?"Prova enviada! Aguarde o instrutor.":s==="encerrado"?"Cadastro concluído. Obrigado, "+R0.nome+"!":"Olá, "+R0.nome+"! Aguardando o instrutor aprovar sua entrada…",false)}}
+ else{show("gate");gmsg(s==="negado"?"Sua entrada foi negada pelo instrutor. Fale com ele.":s==="enviada"?"Prova enviada! Aguarde o instrutor.":s==="encerrado"?"Cadastro concluído. Obrigado, "+R0.nome+"!":"Olá, "+R0.nome+"! Aguardando o instrutor aprovar sua entrada…",false)}}
 function watch(){if(ref)ref.off();ref=DB.ref("alunos/"+ID);ref.on("value",s=>{R0=s.val();gupd()})}
 function init(){
  if(!okc){gmsg("Firebase não configurado. Você pode treinar sem registro.",false);$("gt").classList.remove("hide");return}
